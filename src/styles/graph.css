@@ -1,0 +1,42 @@
+/* .graph-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+} */
+
+.graph-container {
+    display: grid;
+    grid-template: 100px 200px / 100px 100px 100px;
+    margin: 5em;
+    gap: 2em;
+}
+
+.income-graph,
+.spending-graph,
+.balance-graph {
+    width: 100%;
+    grid-row: 2;
+    align-self: end;
+}
+
+.income-graph {
+    background-color: brown;
+    /* grid: 2 / 1; */
+    grid-column: 1;
+}
+
+.spending-graph {
+    background-color: aquamarine;
+    grid-column: 3;
+}
+
+.balance-graph {
+    background-color: blueviolet;
+    grid-column: 2;
+    height: 100%;
+}
+
+.graph-text {
+    grid-row: 1;
+}

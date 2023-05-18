@@ -1,0 +1,13 @@
+.daily {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.daily-input {
+    width: 100%;
+}
+
+.daily-btn {
+    width: 100%;
+}

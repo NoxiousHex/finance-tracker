@@ -1,18 +1,26 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import Daily from "./modules/Daily";
-import currency from "currency.js";
-import { SpendingHistory } from "./utils/interfaces";
+import Daily from "./components/Daily";
+import History from "./components/History";
+import Header from "./components/Navbar";
+import { Route, SpendingHistory, CurrencyObject } from "./utils/interfaces";
+import { EUR } from "./utils/currencies";
+import Settings from "./components/Settings";
 
 function App() {
     const [history, setHistory] = useState<SpendingHistory[]>(
         fetchFromStorage("history", "[]")
     );
-    console.log(history);
+    const [page, setPage] = useState<Route>("daily");
+
+    const [currencyUsed, setCurrencyUsed] = useState<CurrencyObject>(
+        JSON.parse(localStorage.getItem("currency") || "null") || EUR
+    );
+
     function newHistoryItem(
-        income: currency,
-        spending: currency,
-        balance: currency,
+        income: number,
+        spending: number,
+        balance: number,
         date: string
     ): void {
         const item = {
@@ -35,12 +43,25 @@ function App() {
         localStorage.setItem("history", JSON.stringify(history));
     }, [history]);
 
+    useEffect(() => {
+        localStorage.setItem("currency", JSON.stringify(currencyUsed));
+    }, [currencyUsed]);
+
+    const renderRoute =
+        page === "daily" ? (
+            <Daily addToHistory={newHistoryItem} currency={currencyUsed} />
+        ) : page === "history" ? (
+            <History history={history} currency={currencyUsed} />
+        ) : page === "settings" ? (
+            <Settings setCurrencyUsed={setCurrencyUsed} />
+        ) : (
+            <h2>Something went wrong</h2>
+        );
+
     return (
         <>
-            <header></header>
-            <main>
-                <Daily addToHistory={newHistoryItem} />
-            </main>
+            <Header setPage={setPage} />
+            <main>{renderRoute}</main>
         </>
     );
 }

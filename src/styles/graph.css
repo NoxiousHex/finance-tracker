@@ -1,15 +1,7 @@
-/* .graph-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-} */
-
 .graph-container {
     display: grid;
-    grid-template: 100px 200px / 100px 100px 100px;
-    margin: 5em;
-    gap: 2em;
+    grid-template: 15vh 35vh / 25vw 25vw 25vw;
+    gap: 1em;
 }
 
 .income-graph,
@@ -18,25 +10,43 @@
     width: 100%;
     grid-row: 2;
     align-self: end;
+    animation: 1s 1 forwards graph-render;
+}
+
+@keyframes graph-render {
+    from {
+        height: 0%;
+    }
 }
 
 .income-graph {
-    background-color: brown;
+    background-color: #87cbb7;
     /* grid: 2 / 1; */
     grid-column: 1;
 }
 
 .spending-graph {
-    background-color: aquamarine;
+    background-color: #c13db7;
     grid-column: 3;
 }
 
 .balance-graph {
-    background-color: blueviolet;
+    background-color: #6500ad;
     grid-column: 2;
     height: 100%;
 }
 
 .graph-text {
     grid-row: 1;
+}
+
+.graph-date {
+    margin: 0 0 0 0.25em;
+}
+
+@media (min-width: 700px) {
+    .graph-container {
+        grid-template-columns: 175px 175px 175px;
+        gap: 2em;
+    }
 }

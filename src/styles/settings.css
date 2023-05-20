@@ -1,0 +1,14 @@
+.settings {
+    margin-top: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+.settings-currency {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}

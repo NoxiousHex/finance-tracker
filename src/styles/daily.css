@@ -1,8 +1,23 @@
-.daily {
+.daily,
+.button-container {
     display: flex;
     flex-direction: column;
     gap: 1.5em;
     align-items: center;
+}
+
+.daily {
     padding-top: 1em;
     height: 90vh;
+}
+
+@media (min-width: 700px) {
+    .button-container {
+        flex-direction: row;
+        gap: 3em;
+    }
+
+    .daily-btn {
+        width: 25vw;
+    }
 }

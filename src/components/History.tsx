@@ -1,21 +1,21 @@
 import { FC, ReactNode, useState } from "react";
 import {
-    GraphTuple,
-    SpendingHistory,
+    storedFinanceObject,
     CurrencyObject,
     DateRange,
+    ActiveFinanceObject,
 } from "../utils/interfaces";
 import Graph from "./Graph";
-import { last, CalcAverage } from "../utils/utils";
-import { curr } from "../utils/currencies";
+import { last, CalcAverage, dateToLocale } from "../utils/utils";
+import { parseObjectToCurr } from "../utils/currencies";
 import "../styles/history.css";
 
-interface IProps {
-    history: SpendingHistory[];
+interface HistoryProps {
+    history: storedFinanceObject[];
     currency: CurrencyObject;
 }
 
-const History: FC<IProps> = (props) => {
+const History: FC<HistoryProps> = (props) => {
     const { history, currency } = props;
     const [date, setDate] = useState<DateRange>({
         startDate: "",
@@ -24,11 +24,12 @@ const History: FC<IProps> = (props) => {
 
     const { startDate, endDate } = date;
 
-    const [dataUsed, setDataUsed] = useState<GraphTuple>([
-        curr(0, currency),
-        curr(0, currency),
-        curr(0, currency),
-    ]);
+    const [data, setData] = useState<ActiveFinanceObject>(
+        parseObjectToCurr(
+            { income: 0, balance: 0, spending: 0, date: "" },
+            currency
+        )
+    );
 
     function handleChange(target: HTMLInputElement): void {
         if (target.name === "start-date") {
@@ -39,23 +40,30 @@ const History: FC<IProps> = (props) => {
     }
 
     function handleClick(): void {
-        const trimmedHistory: SpendingHistory[] = history.filter(
+        const trimmedHistory: storedFinanceObject[] = history.filter(
             (historyObj) =>
                 historyObj.date >= startDate && historyObj.date <= endDate
         );
         const averageIncome = CalcAverage(trimmedHistory, "income");
         const averageBalance = CalcAverage(trimmedHistory, "balance");
         const averageSpending = CalcAverage(trimmedHistory, "spending");
+        const formattedDate = dateToLocale([startDate, endDate]);
 
-        setDataUsed([
-            curr(averageIncome, currency),
-            curr(averageBalance, currency),
-            curr(averageSpending, currency),
-        ]);
+        setData(
+            parseObjectToCurr(
+                {
+                    income: averageIncome,
+                    balance: averageBalance,
+                    spending: averageSpending,
+                    date: `${formattedDate[0]} - ${formattedDate[1]}`,
+                },
+                currency
+            )
+        );
     }
 
     function renderGraph(): ReactNode {
-        if (dataUsed.reduce((a, b) => a + b.intValue, 0) === 0) {
+        if (data.date === "") {
             return <></>;
         } else if (
             startDate < history[0].date ||
@@ -72,8 +80,7 @@ const History: FC<IProps> = (props) => {
         } else {
             return (
                 <Graph
-                    graphTuple={dataUsed}
-                    date={[startDate, endDate]}
+                    data={data}
                     currency={currency}
                     graphText={graphTextHistory}
                 />

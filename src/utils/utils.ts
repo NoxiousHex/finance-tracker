@@ -40,8 +40,8 @@ function CalcAverage(array: any[], type: FinanceLiteral): number {
     return reducedAmount / array.length;
 }
 
-function dateToLocale(date: DateTuple, index: number): string {
-    return new Date(date[index]).toLocaleDateString();
+function dateToLocale(date: DateTuple): string[] {
+    return date.map((day) => new Date(day).toLocaleDateString());
 }
 
 export { last, calculatePercent, decimalConv, max, CalcAverage, dateToLocale };

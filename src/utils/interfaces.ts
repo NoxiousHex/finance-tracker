@@ -1,13 +1,13 @@
 import currency from "currency.js";
 
-interface SpendingHistory {
+interface storedFinanceObject {
     spending: number;
     income: number;
     balance: number;
     date: string;
 }
 
-interface DailyBalance {
+interface ActiveFinanceObject {
     income: currency;
     balance: currency;
     spending: currency;
@@ -35,22 +35,19 @@ interface GraphText {
     spending: string;
 }
 
-type GraphTuple = readonly [currency, currency, currency];
-
 type FinanceLiteral = "income" | "balance" | "spending";
 
 type Route = "intro" | "daily" | "history" | "settings";
 
-type DateTuple = readonly [string] | readonly [string, string];
+type DateTuple = readonly [string, string];
 
 export type {
-    SpendingHistory,
-    DailyBalance,
+    storedFinanceObject,
+    ActiveFinanceObject,
     DateRange,
     CurrencySymbol,
     CurrencyObject,
     GraphText,
-    GraphTuple,
     FinanceLiteral,
     Route,
     DateTuple,

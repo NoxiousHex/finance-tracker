@@ -2,12 +2,14 @@ import { FC, SetStateAction, Dispatch, useState } from "react";
 import { CurrencyObject } from "../utils/interfaces";
 import { EUR, USD, GBP } from "../utils/currencies";
 import "../styles/settings.css";
+import ClearConfirmation from "./ClearConfirmation";
 
-interface IProps {
+interface SettingsProps {
     setCurrencyUsed: Dispatch<SetStateAction<CurrencyObject>>;
 }
 
-export const Settings: FC<IProps> = (props) => {
+export const Settings: FC<SettingsProps> = (props) => {
+    // Related to currency settings
     const { setCurrencyUsed } = props;
 
     const [selectedCurrency, setSelectedCurrency] = useState<string>("€");
@@ -25,6 +27,12 @@ export const Settings: FC<IProps> = (props) => {
         setCurrencyUsed(foundCurrency);
     }
 
+    // Related to data clearing
+
+    const [clear, setClear] = useState<boolean>(false);
+
+    const confimation = clear && <ClearConfirmation setClear={setClear} />;
+
     return (
         <div className="settings">
             <label className="settings-currency">
@@ -36,6 +44,8 @@ export const Settings: FC<IProps> = (props) => {
                 </select>
             </label>
             <button onClick={handleClick}>Apply</button>
+            <button onClick={() => setClear(true)}>Clear data</button>
+            {confimation}
         </div>
     );
 };

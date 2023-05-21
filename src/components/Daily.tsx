@@ -1,15 +1,15 @@
 import { FC, useState, useEffect } from "react";
 import RenderGraph from "./Graph";
-import { curr, parseObjectToCurr } from "../utils/currencies";
+import { parseObjectToCurr, curr } from "../utils/currencies";
 import {
     CurrencyObject,
-    DailyBalance,
-    SpendingHistory,
+    ActiveFinanceObject,
+    storedFinanceObject,
 } from "../utils/interfaces";
 import { decimalConv } from "../utils/utils";
 import "../styles/daily.css";
 
-interface IProps {
+interface DailyProps {
     addToHistory: (
         income: number,
         spending: number,
@@ -19,10 +19,10 @@ interface IProps {
     currency: CurrencyObject;
 }
 
-const Daily: FC<IProps> = (props) => {
+const Daily: FC<DailyProps> = (props) => {
     const { addToHistory, currency } = props;
 
-    const [daily, setDaily] = useState<DailyBalance>(
+    const [daily, setDaily] = useState<ActiveFinanceObject>(
         parseObjectToCurr(
             {
                 income: 0,
@@ -34,15 +34,13 @@ const Daily: FC<IProps> = (props) => {
         )
     );
 
-    console.log(daily.income);
-
     const { income, balance, spending, date } = daily;
 
     const [input, setInput] = useState<string>("0");
-    // curr(storedValues.income, currency)
+
     useEffect(() => {
         if (date === "") {
-            const storedValues: SpendingHistory = JSON.parse(
+            const storedValues: storedFinanceObject = JSON.parse(
                 localStorage.getItem("daily") || ""
             );
             if (storedValues)
@@ -61,7 +59,6 @@ const Daily: FC<IProps> = (props) => {
     }, [daily]);
 
     function handleClick(id: string): void {
-        console.log(id);
         if (input > "0") {
             if (id === "add-btn") {
                 setDaily((prevDaily) => ({
@@ -96,7 +93,6 @@ const Daily: FC<IProps> = (props) => {
 
     useEffect(() => {
         if (date && new Date().toLocaleDateString("en-CA") > date) {
-            console.log("It's a new day");
             newDay();
         } else {
             setDaily((prevDaily) => ({
@@ -112,11 +108,15 @@ const Daily: FC<IProps> = (props) => {
         spending: "Daily spending",
     };
 
+    const formattedDateDaily = {
+        ...daily,
+        date: new Date(date).toLocaleDateString(),
+    };
+
     return (
         <section className="daily">
             <RenderGraph
-                graphTuple={[income, balance, spending]}
-                date={[date]}
+                data={formattedDateDaily}
                 currency={currency}
                 graphText={graphTextDaily}
             />

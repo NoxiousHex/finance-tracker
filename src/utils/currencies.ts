@@ -1,22 +1,20 @@
 import currency from "currency.js";
 import {
     CurrencyObject,
-    DailyBalance,
-    GraphTuple,
-    SpendingHistory,
+    ActiveFinanceObject,
+    storedFinanceObject,
 } from "./interfaces";
 
 function parseObjectToCurr(
-    obj: DailyBalance,
+    obj: storedFinanceObject,
     currencyData: CurrencyObject
-): DailyBalance {
-    const currencyObj = Object.fromEntries(
-        Object.entries(obj).map(([key, value]) =>
-            typeof value === "number"
-                ? [key, currency(value, currencyData)]
-                : [key, value]
-        )
-    );
+): ActiveFinanceObject {
+    const currencyObj = {
+        ...obj,
+        income: currency(obj.income, currencyData),
+        balance: currency(obj.balance, currencyData),
+        spending: currency(obj.spending, currencyData),
+    };
     return currencyObj;
 }
 
@@ -49,4 +47,4 @@ const GBP: CurrencyObject = {
     symbol: "£",
 };
 
-export { EUR, USD, GBP, curr, parseObjectToCurr };
+export { parseObjectToCurr, curr, EUR, USD, GBP };

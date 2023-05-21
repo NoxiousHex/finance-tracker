@@ -3,11 +3,11 @@ import { Route } from "../utils/interfaces";
 import "../styles/navbar.css";
 import { MdSunny, MdMenuBook, MdSettingsSuggest } from "react-icons/md";
 
-interface NavProps {
+interface NavbarProps {
     setPage: Dispatch<SetStateAction<Route>>;
 }
 
-const Header: FC<NavProps> = (props) => {
+const Header: FC<NavbarProps> = (props) => {
     const { setPage } = props;
     return (
         <nav className="navbar">

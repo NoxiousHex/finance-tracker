@@ -1,13 +1,20 @@
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 import {
     storedFinanceObject,
     CurrencyObject,
     DateRange,
     ActiveFinanceObject,
+    DateTuple,
 } from "../utils/interfaces";
 import Graph from "./Graph";
-import { last, CalcAverage, dateToLocale } from "../utils/utils";
-import { parseObjectToCurr } from "../utils/currencies";
+import {
+    last,
+    CalcAverage,
+    dateToLocale,
+    constructEmptyFinance,
+    getPastDate,
+} from "../utils/utils";
+import { parseFinanceObject } from "../utils/currencies";
 import "../styles/history.css";
 
 interface HistoryProps {
@@ -25,13 +32,14 @@ const History: FC<HistoryProps> = (props) => {
     const { startDate, endDate } = date;
 
     const [data, setData] = useState<ActiveFinanceObject>(
-        parseObjectToCurr(
-            { income: 0, balance: 0, spending: 0, date: "" },
-            currency
-        )
+        constructEmptyFinance(currency)
     );
 
+    // State to keep track of whether shortcut was clicked
+    const [shortcutUsed, setShortcutUsed] = useState(false);
+
     function handleChange(target: HTMLInputElement): void {
+        setData(constructEmptyFinance(currency));
         if (target.name === "start-date") {
             setDate((prevDate) => ({ ...prevDate, startDate: target.value }));
         } else if (target.name === "end-date") {
@@ -50,7 +58,7 @@ const History: FC<HistoryProps> = (props) => {
         const formattedDate = dateToLocale([startDate, endDate]);
 
         setData(
-            parseObjectToCurr(
+            parseFinanceObject(
                 {
                     income: averageIncome,
                     balance: averageBalance,
@@ -61,6 +69,45 @@ const History: FC<HistoryProps> = (props) => {
             )
         );
     }
+
+    function handleShortcut(target: HTMLParagraphElement): void {
+        const text = target.textContent;
+        setShortcutUsed(true);
+        if (text === "Yesterday") {
+            setDate({
+                startDate: last(history).date,
+                endDate: last(history).date,
+            });
+        } else {
+            let days: number = 0;
+            if (text === "7D") days = 7;
+            else if (text === "14D") days = 14;
+            else if (text === "30D") days = 30;
+            else days = 183; // 182.625
+            const dates: DateTuple = getPastDate(history, days);
+            setDate({
+                startDate: dates[0],
+                endDate: dates[1],
+            });
+        }
+    }
+
+    // Graph should auto-render when shortcut is clicked, but useState
+    // is asynchronous so calling handleClick() inside is not reliable
+    // therefore we need to make sure state has updated before we run it
+    // but we also want to only render it with shortcuts, not when used
+    // uses date selector. Solution would be a custom useState hook that
+    // runs function after state update, but using conditional useEffect is
+    // easier solution, although it requires another state to keep track of whether
+    // shortcut was clicked or not
+
+    useEffect(() => {
+        if (shortcutUsed) {
+            console.log("Effect if ran");
+            setShortcutUsed(false);
+            handleClick();
+        }
+    }, [date]);
 
     function renderGraph(): ReactNode {
         if (data.date === "") {
@@ -98,6 +145,38 @@ const History: FC<HistoryProps> = (props) => {
         <div className="history">
             <h2 className="title">History</h2>
             {renderGraph()}
+            <div className="shortcut-container">
+                <p
+                    className="history-shortcut"
+                    onClick={(e) => handleShortcut(e.currentTarget)}
+                >
+                    Yesterday
+                </p>
+                <p
+                    className="history-shortcut"
+                    onClick={(e) => handleShortcut(e.currentTarget)}
+                >
+                    7D
+                </p>
+                <p
+                    className="history-shortcut"
+                    onClick={(e) => handleShortcut(e.currentTarget)}
+                >
+                    14D
+                </p>
+                <p
+                    className="history-shortcut"
+                    onClick={(e) => handleShortcut(e.currentTarget)}
+                >
+                    30D
+                </p>
+                <p
+                    className="history-shortcut"
+                    onClick={(e) => handleShortcut(e.currentTarget)}
+                >
+                    6M
+                </p>
+            </div>
             <label className="date-label">
                 Start date:
                 <input

@@ -5,7 +5,7 @@ import {
     storedFinanceObject,
 } from "./interfaces";
 
-function parseObjectToCurr(
+function parseFinanceObject(
     obj: storedFinanceObject,
     currencyData: CurrencyObject
 ): ActiveFinanceObject {
@@ -47,4 +47,4 @@ const GBP: CurrencyObject = {
     symbol: "£",
 };
 
-export { parseObjectToCurr, curr, EUR, USD, GBP };
+export { parseFinanceObject, curr, EUR, USD, GBP };

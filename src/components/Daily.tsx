@@ -1,12 +1,12 @@
 import { FC, useState, useEffect } from "react";
 import RenderGraph from "./Graph";
-import { parseObjectToCurr, curr } from "../utils/currencies";
+import { parseFinanceObject, curr } from "../utils/currencies";
 import {
     CurrencyObject,
     ActiveFinanceObject,
     storedFinanceObject,
 } from "../utils/interfaces";
-import { decimalConv } from "../utils/utils";
+import { constructEmptyFinance, decimalConv } from "../utils/utils";
 import "../styles/daily.css";
 
 interface DailyProps {
@@ -23,15 +23,7 @@ const Daily: FC<DailyProps> = (props) => {
     const { addToHistory, currency } = props;
 
     const [daily, setDaily] = useState<ActiveFinanceObject>(
-        parseObjectToCurr(
-            {
-                income: 0,
-                balance: 0,
-                spending: 0,
-                date: "",
-            },
-            currency
-        )
+        constructEmptyFinance(currency)
     );
 
     const { income, balance, spending, date } = daily;
@@ -44,7 +36,7 @@ const Daily: FC<DailyProps> = (props) => {
                 localStorage.getItem("daily") || ""
             );
             if (storedValues)
-                setDaily(parseObjectToCurr(storedValues, currency));
+                setDaily(parseFinanceObject(storedValues, currency));
         } else {
             localStorage.setItem(
                 "daily",
@@ -126,20 +118,22 @@ const Daily: FC<DailyProps> = (props) => {
                 className="daily-input"
                 onChange={(e) => setInput(e.target.value)}
             ></input>
-            <button
-                className="daily-btn"
-                id="add-btn"
-                onClick={(e) => handleClick(e.currentTarget.id)}
-            >
-                Add
-            </button>
-            <button
-                className="daily-btn"
-                id="subtract-btn"
-                onClick={(e) => handleClick(e.currentTarget.id)}
-            >
-                Subtract
-            </button>
+            <div className="button-container">
+                <button
+                    className="daily-btn"
+                    id="add-btn"
+                    onClick={(e) => handleClick(e.currentTarget.id)}
+                >
+                    Add
+                </button>
+                <button
+                    className="daily-btn"
+                    id="subtract-btn"
+                    onClick={(e) => handleClick(e.currentTarget.id)}
+                >
+                    Subtract
+                </button>
+            </div>
         </section>
     );
 };

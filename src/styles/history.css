@@ -29,6 +29,11 @@ input {
     width: 70vw;
 }
 
+.shortcut-container {
+    display: flex;
+    gap: 1em;
+}
+
 @media (min-width: 700px) {
     .graph-container {
         grid-template-columns: 150px 150px 150px;

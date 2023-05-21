@@ -3,12 +3,12 @@ import "./App.css";
 import Daily from "./components/Daily";
 import History from "./components/History";
 import Header from "./components/Navbar";
-import { Route, SpendingHistory, CurrencyObject } from "./utils/interfaces";
+import { Route, storedFinanceObject, CurrencyObject } from "./utils/interfaces";
 import { EUR } from "./utils/currencies";
 import Settings from "./components/Settings";
 
 function App() {
-    const [history, setHistory] = useState<SpendingHistory[]>(
+    const [history, setHistory] = useState<storedFinanceObject[]>(
         fetchFromStorage("history", "[]")
     );
     const [page, setPage] = useState<Route>("daily");
@@ -35,7 +35,7 @@ function App() {
     function fetchFromStorage(
         entry: string,
         defaultVal: string
-    ): SpendingHistory[] {
+    ): storedFinanceObject[] {
         return JSON.parse(localStorage.getItem(entry) || defaultVal);
     }
 

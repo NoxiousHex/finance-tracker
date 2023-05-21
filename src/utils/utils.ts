@@ -1,4 +1,11 @@
-import { DateTuple, FinanceLiteral } from "./interfaces";
+import { parseFinanceObject } from "./currencies";
+import {
+    CurrencyObject,
+    DateTuple,
+    FinanceLiteral,
+    ActiveFinanceObject,
+    storedFinanceObject,
+} from "./interfaces";
 
 function last(array: any[]) {
     return array[array.length - 1];
@@ -44,4 +51,28 @@ function dateToLocale(date: DateTuple): string[] {
     return date.map((day) => new Date(day).toLocaleDateString());
 }
 
-export { last, calculatePercent, decimalConv, max, CalcAverage, dateToLocale };
+function constructEmptyFinance(currency: CurrencyObject): ActiveFinanceObject {
+    return parseFinanceObject(
+        { income: 0, balance: 0, spending: 0, date: "" },
+        currency
+    );
+}
+
+function getPastDate(history: storedFinanceObject[], days: number): DateTuple {
+    if (days > history.length) return ["null", "null"];
+    const startDate = history[history.length - days].date;
+    const endDate = last(history).date;
+
+    return [startDate, endDate];
+}
+
+export {
+    last,
+    calculatePercent,
+    decimalConv,
+    max,
+    CalcAverage,
+    dateToLocale,
+    constructEmptyFinance,
+    getPastDate,
+};

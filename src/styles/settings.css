@@ -12,3 +12,7 @@
     flex-direction: column;
     gap: 0.5em;
 }
+
+.clear-btn {
+    margin-bottom: 0.8em;
+}

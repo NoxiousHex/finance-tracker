@@ -77,19 +77,27 @@ const Daily: FC<DailyProps> = (props) => {
     }
 
     function newDay(): void {
-        const timeDiff = timeDiffInDays(last(history).date, date);
+        const timeDiff = history ? timeDiffInDays(date, last(history).date) : 1;
         // When more than 1 day has passed since last use fill history with
         // dummy days with balance kept as is for the sake of history calculations
         if (timeDiff > 1) {
-            for (let i = 1; i < timeDiff; i++) {
-                const prevDay: Date = new Date(last(history).date);
+            // To make sure that the dates are generated correctly and because states update slow
+            // and we can't rely on them to be updated before another loop round begins
+            // I decided to first have a loop to generate the correct dates and then another
+            // loop to actually commit them to history state
+            const missingDates: string[] = [];
+            let prevDay: Date;
+            for (let i = 1; i < timeDiff - 1; i++) {
+                i === 1
+                    ? (prevDay = new Date(last(history).date))
+                    : (prevDay = new Date(last(missingDates)));
                 const newDay: number = new Date().setTime(
                     prevDay.getTime() + 86400000
                 );
-                const missingDate: string = new Date(newDay).toLocaleDateString(
-                    "en-CA"
-                );
-                addToHistory(0, 0, last(history).balance, missingDate);
+                missingDates.push(new Date(newDay).toLocaleDateString("en-CA"));
+            }
+            for (const date of missingDates) {
+                addToHistory(0, 0, last(history).balance, date);
             }
         }
         // Add current day
@@ -110,13 +118,13 @@ const Daily: FC<DailyProps> = (props) => {
     useEffect(() => {
         if (date && new Date().toLocaleDateString("en-CA") > date) {
             newDay();
-        } else {
+        } else if (!date && !localStorage.getItem("daily")) {
             setDaily((prevDaily) => ({
                 ...prevDaily,
                 date: new Date().toLocaleDateString("en-CA"),
             }));
         }
-    }, []);
+    }, [daily]);
 
     const graphTextDaily: GraphText = {
         income: "Daily income",

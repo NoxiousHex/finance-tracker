@@ -29,7 +29,11 @@ function App() {
             balance: balance,
             date: date,
         };
-        setHistory((prevHistory) => [...prevHistory, item]);
+        if (!history) {
+            setHistory([item]);
+        } else {
+            setHistory((prevHistory) => [...prevHistory, item]);
+        }
     }
 
     useEffect(() => {

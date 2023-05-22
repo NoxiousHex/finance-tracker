@@ -156,6 +156,7 @@ const History: FC<HistoryProps> = (props) => {
                 key={uuid()}
                 className="history-shortcut"
                 name={text}
+                disabled={!history}
                 onClick={(e) => handleShortcut(e.currentTarget)}
             >
                 {text}

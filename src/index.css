@@ -62,14 +62,23 @@ button {
     transition: border-color 0.25s;
 }
 
-button:hover,
-.history-shortcut:hover {
+button:hover {
     border-color: black;
 }
 
 button:focus,
 button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
+}
+
+input:disabled,
+button:disabled {
+    cursor: not-allowed;
+    border-color: #bd3c44;
+}
+
+button:disabled:active {
+    background-color: #bd3c44;
 }
 
 input,
@@ -90,8 +99,7 @@ label {
         color: rgba(255, 255, 255, 0.87);
         background-color: #181310;
     }
-    button:hover,
-    .history-shortcut:hover {
+    button:hover {
         border-color: white;
     }
 
@@ -100,12 +108,10 @@ label {
         background-color: white;
         color: black;
     }
-    /* a:hover {
-        color: #747bff;
+    input:disabled,
+    button:disabled {
+        border-color: #bd3c44;
     }
-    button {
-        background-color: #f9f9f9;
-    } */
 }
 
 @media (min-width: 700px) {

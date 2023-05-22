@@ -54,4 +54,8 @@ input[type="date"]:disabled {
     .date-label:last-child {
         margin-top: 1em;
     }
+
+    .date-error-msg {
+        width: 500px;
+    }
 }

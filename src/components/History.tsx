@@ -126,7 +126,7 @@ const History: FC<HistoryProps> = (props) => {
             return (
                 <div className="date-error-msg">
                     <h3>
-                        One or both dates is out of bounds. Please select
+                        One or both dates are out of bounds. Please select a
                         different date.
                     </h3>
                 </div>
@@ -203,7 +203,9 @@ const History: FC<HistoryProps> = (props) => {
                     onChange={(e) => handleChange(e.target)}
                 ></input>
             </label>
-            <button onClick={handleClick}>Select date</button>
+            <button disabled={!history} onClick={handleClick}>
+                Select date
+            </button>
         </div>
     );
 };

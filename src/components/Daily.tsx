@@ -39,7 +39,7 @@ const Daily: FC<DailyProps> = (props) => {
     useEffect(() => {
         if (date === "") {
             const storedValues: storedFinanceObject = JSON.parse(
-                localStorage.getItem("daily") || ""
+                localStorage.getItem("daily") || "null"
             );
             if (storedValues)
                 setDaily(parseFinanceObject(storedValues, currency));

@@ -9,7 +9,7 @@ import Settings from "./components/Settings";
 
 function App() {
     const [history, setHistory] = useState<storedFinanceObject[]>(
-        fetchFromStorage("history", "[]")
+        JSON.parse(localStorage.getItem("history") || "null")
     );
     const [page, setPage] = useState<Route>("daily");
 
@@ -30,13 +30,6 @@ function App() {
             date: date,
         };
         setHistory((prevHistory) => [...prevHistory, item]);
-    }
-
-    function fetchFromStorage(
-        entry: string,
-        defaultVal: string
-    ): storedFinanceObject[] {
-        return JSON.parse(localStorage.getItem(entry) || defaultVal);
     }
 
     useEffect(() => {

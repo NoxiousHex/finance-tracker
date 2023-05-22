@@ -20,6 +20,7 @@
     gap: 0.25em;
     margin: 0;
     padding: 0.5em 1em;
+    width: 75px;
     border-radius: 0.75em;
     border: 1px solid transparent;
     font-weight: 500;
@@ -54,6 +55,7 @@
     .nav-link {
         flex-direction: row;
         gap: 0.5em;
+        width: auto;
         font-size: 1rem;
     }
 

@@ -49,7 +49,11 @@ function App() {
 
     const renderRoute =
         page === "daily" ? (
-            <Daily addToHistory={newHistoryItem} currency={currencyUsed} />
+            <Daily
+                history={history}
+                addToHistory={newHistoryItem}
+                currency={currencyUsed}
+            />
         ) : page === "history" ? (
             <History history={history} currency={currencyUsed} />
         ) : page === "settings" ? (

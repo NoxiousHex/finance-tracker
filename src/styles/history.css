@@ -7,14 +7,13 @@
     overflow: scroll;
 }
 
-.graph-container {
-    display: grid;
-    grid-template: 15vh 25vh / 25vw 25vw 25vw;
-    gap: 1em;
-}
-
 .title {
     margin: 0.75em 0 0 0;
+}
+
+.date-label {
+    display: flex;
+    flex-direction: column;
 }
 
 button {
@@ -34,15 +33,22 @@ input {
     gap: 1em;
 }
 
+.history-shortcut {
+    cursor: pointer;
+    background-color: #bd3c44;
+    padding: 0.25em 0.5em;
+    border-radius: 0.25em;
+    font-weight: 500;
+    border: 1px solid #bd3c44;
+}
+
 @media (min-width: 700px) {
     .graph-container {
         grid-template-columns: 150px 150px 150px;
         gap: 2em;
     }
 
-    .date-label {
+    .date-label:last-child {
         margin-top: 1em;
-        display: flex;
-        flex-direction: column;
     }
 }

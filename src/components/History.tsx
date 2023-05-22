@@ -92,7 +92,7 @@ const History: FC<HistoryProps> = (props) => {
         }
     }
 
-    // Graph should auto-render when shortcut is clicked, but useState
+    // Graph should auto-render when the shortcut is clicked, but useState
     // is asynchronous so calling handleClick() inside is not reliable
     // therefore we need to make sure state has updated before we run it
     // but we also want to only render it with shortcuts, not when used
@@ -103,7 +103,6 @@ const History: FC<HistoryProps> = (props) => {
 
     useEffect(() => {
         if (shortcutUsed) {
-            console.log("Effect if ran");
             setShortcutUsed(false);
             handleClick();
         }
@@ -182,6 +181,7 @@ const History: FC<HistoryProps> = (props) => {
                 <input
                     type="date"
                     name="start-date"
+                    value={startDate}
                     onChange={(e) => handleChange(e.target)}
                 ></input>
             </label>
@@ -190,6 +190,7 @@ const History: FC<HistoryProps> = (props) => {
                 <input
                     type="date"
                     name="end-date"
+                    value={endDate}
                     onChange={(e) => handleChange(e.target)}
                 ></input>
             </label>

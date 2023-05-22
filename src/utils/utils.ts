@@ -66,6 +66,16 @@ function getPastDate(history: storedFinanceObject[], days: number): DateTuple {
     return [startDate, endDate];
 }
 
+function timeDiffInDays(day1: string, day2: string): number {
+    const msDay: number = 86400000;
+    const dateObjects: [Date, Date] = [new Date(day1), new Date(day2)];
+    const [a, b] = dateObjects;
+    const day1Utc: number = Date.UTC(a.getFullYear(), a.getMonth(), a.getDay());
+    const day2Utc: number = Date.UTC(b.getFullYear(), b.getMonth(), b.getDay());
+
+    return Math.floor((day2Utc - day1Utc) / msDay);
+}
+
 export {
     last,
     calculatePercent,
@@ -75,4 +85,5 @@ export {
     dateToLocale,
     constructEmptyFinance,
     getPastDate,
+    timeDiffInDays,
 };

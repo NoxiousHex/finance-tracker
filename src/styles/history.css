@@ -31,6 +31,9 @@ input {
 .shortcut-container {
     display: flex;
     gap: 1em;
+    flex-wrap: wrap;
+    padding: 1em;
+    justify-content: center;
 }
 
 .history-shortcut {

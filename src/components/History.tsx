@@ -85,7 +85,8 @@ const History: FC<HistoryProps> = (props) => {
             if (text === "7D") days = 7;
             else if (text === "14D") days = 14;
             else if (text === "30D") days = 30;
-            else days = 183; // 182.625
+            else if (text === "6M") days = 183; // 182.625
+            else days = 365;
             const dates: DateTuple = getPastDate(history, days);
             setDate({
                 startDate: dates[0],

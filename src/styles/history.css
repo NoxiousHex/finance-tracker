@@ -35,11 +35,14 @@ input {
 
 .history-shortcut {
     cursor: pointer;
-    background-color: #bd3c44;
     padding: 0.25em 0.5em;
     border-radius: 0.25em;
-    font-weight: 500;
-    border: 1px solid #bd3c44;
+    width: auto;
+    font-size: 1rem;
+}
+
+input[type="date"]:disabled {
+    color: grey;
 }
 
 @media (min-width: 700px) {

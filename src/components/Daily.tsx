@@ -5,6 +5,7 @@ import {
     CurrencyObject,
     ActiveFinanceObject,
     storedFinanceObject,
+    GraphText,
 } from "../utils/interfaces";
 import {
     constructEmptyFinance,
@@ -117,7 +118,7 @@ const Daily: FC<DailyProps> = (props) => {
         }
     }, []);
 
-    const graphTextDaily = {
+    const graphTextDaily: GraphText = {
         income: "Daily income",
         balance: "Total balance",
         spending: "Daily spending",

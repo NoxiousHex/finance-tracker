@@ -5,13 +5,20 @@ interface ClearConfirmationProps {
 }
 
 export const ClearConfirmation: FC<ClearConfirmationProps> = (props) => {
+    const { setClear } = props;
+
+    function handleClick() {
+        localStorage.clear();
+        setClear(false);
+    }
+
     return (
         <div>
             <h2>Are you sure?</h2>
-            <button className="clear-btn" onClick={() => localStorage.clear()}>
+            <button className="clear-btn" onClick={handleClick}>
                 Yes
             </button>
-            <button onClick={() => props.setClear(false)}>No, stop!</button>
+            <button onClick={() => setClear(false)}>No, stop!</button>
         </div>
     );
 };

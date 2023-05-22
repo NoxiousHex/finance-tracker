@@ -18,9 +18,11 @@ const Graph: FC<GraphProps> = (props) => {
     const graphNumbers = [income.intValue, balance.intValue, spending.intValue];
     // Get highest value to scale graphs towards to prevent overflow
     const maximum: number = max(graphNumbers);
-    const incomeScale: number = calculatePercent(graphNumbers[0], maximum);
-    const balanceScale: number = calculatePercent(graphNumbers[1], maximum);
-    const spendingScale: number = calculatePercent(graphNumbers[2], maximum);
+    const incomeScale: number = calculatePercent(graphNumbers[0], maximum) || 0;
+    const balanceScale: number =
+        calculatePercent(graphNumbers[1], maximum) || 0;
+    const spendingScale: number =
+        calculatePercent(graphNumbers[2], maximum) || 0;
 
     return (
         <div className="graph-body">

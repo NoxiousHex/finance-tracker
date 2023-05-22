@@ -5,6 +5,7 @@ import {
     DateRange,
     ActiveFinanceObject,
     DateTuple,
+    GraphText,
 } from "../utils/interfaces";
 import Graph from "./Graph";
 import {
@@ -14,6 +15,7 @@ import {
     constructEmptyFinance,
     getPastDate,
 } from "../utils/utils";
+import { v4 as uuid } from "uuid";
 import { parseFinanceObject } from "../utils/currencies";
 import "../styles/history.css";
 
@@ -70,8 +72,8 @@ const History: FC<HistoryProps> = (props) => {
         );
     }
 
-    function handleShortcut(target: HTMLParagraphElement): void {
-        const text = target.textContent;
+    function handleShortcut(target: HTMLButtonElement): void {
+        const text = target.name;
         setShortcutUsed(true);
         if (text === "Yesterday") {
             setDate({
@@ -109,7 +111,13 @@ const History: FC<HistoryProps> = (props) => {
     }, [date]);
 
     function renderGraph(): ReactNode {
-        if (data.date === "") {
+        if (!history) {
+            return (
+                <div className="date-error-msg">
+                    <h3>You don't have any history yet.</h3>
+                </div>
+            );
+        } else if (data.date === "") {
             return <></>;
         } else if (
             startDate < history[0].date ||
@@ -134,54 +142,51 @@ const History: FC<HistoryProps> = (props) => {
         }
     }
 
-    const graphTextHistory = {
+    function renderShortcuts(): ReactNode {
+        const shortcutText: string[] = [
+            "Yesterday",
+            "7D",
+            "14D",
+            "30D",
+            "6M",
+            "1Y",
+        ];
+        const shortcutElements: ReactNode[] = shortcutText.map((text) => (
+            <button
+                key={uuid()}
+                className="history-shortcut"
+                name={text}
+                onClick={(e) => handleShortcut(e.currentTarget)}
+            >
+                {text}
+            </button>
+        ));
+        return shortcutElements;
+    }
+
+    const graphTextHistory: GraphText = {
         income: "Average income",
         balance: "Average balance",
         spending: "Average spending",
     };
 
+    const minDate: string = history ? history[0].date : "";
+    const maxDate: string = history ? last(history).date : "";
+
     return (
         <div className="history">
             <h2 className="title">History</h2>
             {renderGraph()}
-            <div className="shortcut-container">
-                <p
-                    className="history-shortcut"
-                    onClick={(e) => handleShortcut(e.currentTarget)}
-                >
-                    Yesterday
-                </p>
-                <p
-                    className="history-shortcut"
-                    onClick={(e) => handleShortcut(e.currentTarget)}
-                >
-                    7D
-                </p>
-                <p
-                    className="history-shortcut"
-                    onClick={(e) => handleShortcut(e.currentTarget)}
-                >
-                    14D
-                </p>
-                <p
-                    className="history-shortcut"
-                    onClick={(e) => handleShortcut(e.currentTarget)}
-                >
-                    30D
-                </p>
-                <p
-                    className="history-shortcut"
-                    onClick={(e) => handleShortcut(e.currentTarget)}
-                >
-                    6M
-                </p>
-            </div>
+            <div className="shortcut-container">{renderShortcuts()}</div>
             <label className="date-label">
                 Start date:
                 <input
                     type="date"
                     name="start-date"
                     value={startDate}
+                    min={minDate}
+                    max={maxDate}
+                    disabled={!history}
                     onChange={(e) => handleChange(e.target)}
                 ></input>
             </label>
@@ -191,6 +196,9 @@ const History: FC<HistoryProps> = (props) => {
                     type="date"
                     name="end-date"
                     value={endDate}
+                    min={minDate}
+                    max={maxDate}
+                    disabled={!history}
                     onChange={(e) => handleChange(e.target)}
                 ></input>
             </label>

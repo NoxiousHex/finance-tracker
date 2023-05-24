@@ -11,6 +11,10 @@
     height: 90vh;
 }
 
+.daily-input {
+    color: black;
+}
+
 @media (min-width: 700px) {
     .button-container {
         flex-direction: row;

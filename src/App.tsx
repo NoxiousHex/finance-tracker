@@ -98,7 +98,7 @@ function App() {
 
     return (
         <>
-            <Navbar setPage={setPage} />
+            <Navbar page={page} setPage={setPage} />
             <main>{renderRoute}</main>
         </>
     );

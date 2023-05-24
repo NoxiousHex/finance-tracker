@@ -180,7 +180,7 @@ const Daily: FC<DailyProps> = (props) => {
     };
 
     return (
-        <section className="daily">
+        <div className="daily">
             <RenderGraph
                 data={formattedDateDaily}
                 currency={currency}
@@ -209,7 +209,7 @@ const Daily: FC<DailyProps> = (props) => {
                     Subtract
                 </button>
             </div>
-        </section>
+        </div>
     );
 };
 

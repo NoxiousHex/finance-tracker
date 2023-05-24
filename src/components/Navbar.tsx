@@ -7,7 +7,7 @@ interface NavbarProps {
     setPage: Dispatch<SetStateAction<Route>>;
 }
 
-const Header: FC<NavbarProps> = (props) => {
+const Navbar: FC<NavbarProps> = (props) => {
     const { setPage } = props;
     return (
         <nav className="navbar">
@@ -27,4 +27,4 @@ const Header: FC<NavbarProps> = (props) => {
     );
 };
 
-export default Header;
+export default Navbar;

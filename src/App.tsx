@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import Daily from "./components/Daily";
 import History from "./components/History";
-import Header from "./components/Navbar";
+import Navbar from "./components/Navbar";
 import { Route, storedFinanceObject, CurrencyObject } from "./utils/interfaces";
 import { EUR } from "./utils/currencies";
 import Settings from "./components/Settings";
@@ -98,7 +98,7 @@ function App() {
 
     return (
         <>
-            <Header setPage={setPage} />
+            <Navbar setPage={setPage} />
             <main>{renderRoute}</main>
         </>
     );

@@ -61,7 +61,7 @@ function App() {
 
     return (
         <>
-            <Header setPage={setPage} />
+            <Header page={page} setPage={setPage} />
             <main>{renderRoute}</main>
         </>
     );

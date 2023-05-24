@@ -1,30 +1,41 @@
-import { FC, SetStateAction, Dispatch, useState } from "react";
+import { FC, useState } from "react";
 import { CurrencyObject } from "../utils/interfaces";
 import { EUR, USD, GBP } from "../utils/currencies";
 import "../styles/settings.css";
 import ClearConfirmation from "./ClearConfirmation";
+import { addDoc, setDoc, doc } from "firebase/firestore";
+import { currencyCollection } from "../firebase";
 
 interface SettingsProps {
-    setCurrencyUsed: Dispatch<SetStateAction<CurrencyObject>>;
+    id: string;
 }
 
 export const Settings: FC<SettingsProps> = (props) => {
     // Related to currency settings
-    const { setCurrencyUsed } = props;
 
     const [selectedCurrency, setSelectedCurrency] = useState<string>("€");
+    const { id } = props;
 
     function handleChange(choice: string): void {
         setSelectedCurrency(choice);
     }
 
-    function handleClick(): void {
+    async function handleClick(): Promise<void> {
         const availableCurrencies: CurrencyObject[] = [EUR, USD, GBP];
         const foundCurrency: CurrencyObject =
             availableCurrencies.find(
                 ({ symbol }) => symbol === selectedCurrency
             ) || EUR;
-        setCurrencyUsed(foundCurrency);
+        try {
+            if (!id) {
+                await addDoc(currencyCollection, foundCurrency);
+            } else {
+                const currencyRef = doc(currencyCollection, id);
+                await setDoc(currencyRef, foundCurrency);
+            }
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     // Related to data clearing

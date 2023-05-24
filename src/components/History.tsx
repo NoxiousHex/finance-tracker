@@ -34,14 +34,13 @@ const History: FC<HistoryProps> = (props) => {
     const { startDate, endDate } = date;
 
     const [data, setData] = useState<ActiveFinanceObject>(
-        constructEmptyFinance(currency)
+        constructEmptyFinance(currency, "")
     );
 
     // State to keep track of whether shortcut was clicked
     const [shortcutUsed, setShortcutUsed] = useState(false);
 
     function handleChange(target: HTMLInputElement): void {
-        setData(constructEmptyFinance(currency));
         if (target.name === "start-date") {
             setDate((prevDate) => ({ ...prevDate, startDate: target.value }));
         } else if (target.name === "end-date") {
@@ -110,15 +109,15 @@ const History: FC<HistoryProps> = (props) => {
             handleClick();
         }
     }, [date]);
-
+    console.log(data.date);
     function renderGraph(): ReactNode {
-        if (!history) {
+        if (!history.length) {
             return (
                 <div className="date-error-msg">
                     <h3>You don't have any history yet.</h3>
                 </div>
             );
-        } else if (data.date === "") {
+        } else if (!data.date) {
             return <></>;
         } else if (
             startDate < history[0].date ||
@@ -157,7 +156,7 @@ const History: FC<HistoryProps> = (props) => {
                 key={uuid()}
                 className="history-shortcut"
                 name={text}
-                disabled={!history}
+                disabled={!history.length}
                 onClick={(e) => handleShortcut(e.currentTarget)}
             >
                 {text}
@@ -172,8 +171,8 @@ const History: FC<HistoryProps> = (props) => {
         spending: "Average spending",
     };
 
-    const minDate: string = history ? history[0].date : "";
-    const maxDate: string = history ? last(history).date : "";
+    const minDate: string = history.length ? history[0].date : "";
+    const maxDate: string = history.length ? last(history).date : "";
 
     return (
         <div className="history">
@@ -188,7 +187,7 @@ const History: FC<HistoryProps> = (props) => {
                     value={startDate}
                     min={minDate}
                     max={maxDate}
-                    disabled={!history}
+                    disabled={!history.length}
                     onChange={(e) => handleChange(e.target)}
                 ></input>
             </label>
@@ -200,11 +199,11 @@ const History: FC<HistoryProps> = (props) => {
                     value={endDate}
                     min={minDate}
                     max={maxDate}
-                    disabled={!history}
+                    disabled={!history.length}
                     onChange={(e) => handleChange(e.target)}
                 ></input>
             </label>
-            <button disabled={!history} onClick={handleClick}>
+            <button disabled={!history.length} onClick={handleClick}>
                 Select date
             </button>
         </div>

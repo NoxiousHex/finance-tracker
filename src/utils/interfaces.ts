@@ -27,6 +27,7 @@ interface CurrencyObject {
     separator: "," | " ";
     decimal: "." | ",";
     symbol: CurrencySymbol;
+    id?: string;
 }
 
 interface GraphText {
@@ -35,9 +36,18 @@ interface GraphText {
     spending: string;
 }
 
+interface DatabaseConfig {
+    apiKey: string;
+    authDomain: string;
+    projectId: string;
+    storageBucket: string;
+    messagingSenderId: string;
+    appId: string;
+}
+
 type FinanceLiteral = "income" | "balance" | "spending";
 
-type Route = "intro" | "daily" | "history" | "settings";
+type Route = "daily" | "history" | "settings";
 
 type DateTuple = readonly [string, string];
 
@@ -48,6 +58,7 @@ export type {
     CurrencySymbol,
     CurrencyObject,
     GraphText,
+    DatabaseConfig,
     FinanceLiteral,
     Route,
     DateTuple,

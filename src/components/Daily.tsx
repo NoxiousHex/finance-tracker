@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import RenderGraph from "./Graph";
-import { parseFinanceObject, curr } from "../utils/currencies";
+import { parseFinanceObject } from "../utils/currencies";
 import {
     CurrencyObject,
     ActiveFinanceObject,
@@ -14,6 +14,8 @@ import {
     last,
 } from "../utils/utils";
 import "../styles/daily.css";
+import { addDoc, onSnapshot, setDoc, doc } from "firebase/firestore";
+import { dailyCollection } from "../firebase";
 
 interface DailyProps {
     history: storedFinanceObject[];
@@ -35,56 +37,93 @@ const Daily: FC<DailyProps> = (props) => {
 
     const { income, balance, spending, date } = daily;
 
+    const [dailyId, setId] = useState<string>("");
+
     const [input, setInput] = useState<string>("");
 
     useEffect(() => {
-        if (date === "") {
-            const storedValues: storedFinanceObject = JSON.parse(
-                localStorage.getItem("daily") || "null"
-            );
-            if (storedValues)
-                setDaily(parseFinanceObject(storedValues, currency));
-        } else {
-            localStorage.setItem(
-                "daily",
-                JSON.stringify({
-                    income: income.intValue,
-                    balance: balance.intValue,
-                    spending: spending.intValue,
-                    date: date,
-                })
-            );
-        }
-    }, [daily]);
+        const unsubscribe = onSnapshot(dailyCollection, (snapshot) => {
+            const dailyArr: storedFinanceObject = snapshot.docs.map((doc) => {
+                const data = doc.data();
+                const id = doc.id;
+                setId(id);
+                return {
+                    income: data.income,
+                    balance: data.balance,
+                    spending: data.spending,
+                    date: data.date,
+                };
+            })[0];
+            if (dailyArr) {
+                setDaily(parseFinanceObject(dailyArr, currency));
+            }
+        });
+        return () => {
+            unsubscribe();
+        };
+    }, [input]);
 
-    function handleClick(id: string): void {
+    async function handleClick(id: string): Promise<void> {
         if (input) {
+            const dailyCopy: ActiveFinanceObject = { ...daily };
             if (id === "add-btn") {
-                setDaily((prevDaily) => ({
-                    ...prevDaily,
-                    income: prevDaily.income.add(decimalConv(input)),
-                    balance: prevDaily.balance.add(decimalConv(input)),
-                }));
+                const newDaily = {
+                    ...dailyCopy,
+                    income: dailyCopy.income.add(decimalConv(input)),
+                    balance: dailyCopy.balance.add(decimalConv(input)),
+                };
+                const newDailyInt = {
+                    income: newDaily.income.intValue,
+                    balance: newDaily.balance.intValue,
+                    spending: newDaily.spending.intValue,
+                    date: newDaily.date,
+                };
+                try {
+                    if (!dailyId) {
+                        await addDoc(dailyCollection, newDailyInt);
+                    } else {
+                        const dailyRef = doc(dailyCollection, dailyId);
+                        await setDoc(dailyRef, newDailyInt);
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
             } else if (id === "subtract-btn") {
-                setDaily((prevDaily) => ({
-                    ...prevDaily,
-                    spending: prevDaily.spending.add(decimalConv(input)),
-                    balance: prevDaily.balance.subtract(decimalConv(input)),
-                }));
+                const newDaily = {
+                    ...dailyCopy,
+                    spending: dailyCopy.spending.add(decimalConv(input)),
+                    balance: dailyCopy.balance.subtract(decimalConv(input)),
+                };
+                const newDailyInt = {
+                    income: newDaily.income.intValue,
+                    balance: newDaily.balance.intValue,
+                    spending: newDaily.spending.intValue,
+                    date: newDaily.date,
+                };
+                try {
+                    if (!dailyId) {
+                        await addDoc(dailyCollection, newDailyInt);
+                    } else {
+                        const dailyRef = await doc(dailyCollection, dailyId);
+                        await setDoc(dailyRef, newDailyInt);
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
             }
         }
         setInput("");
     }
 
-    function newDay(): void {
-        const timeDiff = history ? timeDiffInDays(date, last(history).date) : 1;
-        // When more than 1 day has passed since last use fill history with
+    async function newDay(): Promise<void> {
+        const timeDiff = history.length
+            ? timeDiffInDays(date, last(history).date)
+            : 1;
+        // When more than 1 day has passed since the last use fill history with
         // dummy days with balance kept as is for the sake of history calculations
         if (timeDiff > 1) {
-            // To make sure that the dates are generated correctly and because states update slow
-            // and we can't rely on them to be updated before another loop round begins
-            // I decided to first have a loop to generate the correct dates and then another
-            // loop to actually commit them to history state
+            // Two loops to ensure out list of dates is generated correcly we can't rely on stuffing
+            // everything inside one loop and deriving it from last history object since update takes time
             const missingDates: string[] = [];
             let prevDay: Date;
             for (let i = 1; i < timeDiff - 1; i++) {
@@ -97,32 +136,35 @@ const Daily: FC<DailyProps> = (props) => {
                 missingDates.push(new Date(newDay).toLocaleDateString("en-CA"));
             }
             for (const date of missingDates) {
-                addToHistory(0, 0, last(history).balance, date);
+                addToHistory(0, 0, last(history).balance.intValue, date);
             }
         }
         // Add current day
-        addToHistory(
-            income.intValue,
-            spending.intValue,
-            balance.intValue,
-            date
-        );
-        setDaily((prevDaily) => ({
-            ...prevDaily,
-            income: curr(0, currency),
-            spending: curr(0, currency),
+        // check to make sure this day hasn't been created yet, for example in case of
+        // connection issue in later setDoc() function which could lead to same day
+        // being stored multiple times
+        if (last(history).date !== date) {
+            addToHistory(
+                income.intValue,
+                spending.intValue,
+                balance.intValue,
+                date
+            );
+        }
+        const dailyRef = doc(dailyCollection, dailyId);
+        const dailyCopy: ActiveFinanceObject = { ...daily };
+        const newDaily: storedFinanceObject = {
+            income: 0,
+            balance: dailyCopy.balance.intValue,
+            spending: 0,
             date: new Date().toLocaleDateString("en-CA"),
-        }));
+        };
+        await setDoc(dailyRef, newDaily);
     }
 
     useEffect(() => {
         if (date && new Date().toLocaleDateString("en-CA") > date) {
             newDay();
-        } else if (!date && !localStorage.getItem("daily")) {
-            setDaily((prevDaily) => ({
-                ...prevDaily,
-                date: new Date().toLocaleDateString("en-CA"),
-            }));
         }
     }, [daily]);
 

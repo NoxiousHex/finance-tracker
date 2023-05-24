@@ -36,24 +36,38 @@ function max(array: number[]): number {
 
 function CalcAverage(array: any[], type: FinanceLiteral): number {
     let reducedAmount = 0;
+    // discount 0s so they don't bring down the average
+    let nullNum = 0;
     if (type === "income") {
         reducedAmount = array.reduce((a, b) => a + b.income, 0);
+        array.filter((el) => el.income === 0).length;
     } else if (type === "balance") {
         reducedAmount = array.reduce((a, b) => a + b.balance, 0);
+        nullNum = array.filter((el) => el.balance === 0).length;
     } else if (type === "spending") {
         reducedAmount = array.reduce((a, b) => a + b.spending, 0);
+        nullNum = array.filter((el) => el.spending === 0).length;
     }
 
-    return reducedAmount / array.length;
+    const validEls = array.length - nullNum;
+    return reducedAmount / validEls;
 }
 
 function dateToLocale(date: DateTuple): string[] {
     return date.map((day) => new Date(day).toLocaleDateString());
 }
 
-function constructEmptyFinance(currency: CurrencyObject): ActiveFinanceObject {
+function constructEmptyFinance(
+    currency: CurrencyObject,
+    date = new Date().toLocaleDateString("en-CA")
+): ActiveFinanceObject {
     return parseFinanceObject(
-        { income: 0, balance: 0, spending: 0, date: "" },
+        {
+            income: 0,
+            balance: 0,
+            spending: 0,
+            date: date,
+        },
         currency
     );
 }

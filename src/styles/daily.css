@@ -4,11 +4,12 @@
     flex-direction: column;
     gap: 1.5em;
     align-items: center;
+    overflow: scroll;
 }
 
 .daily {
     padding-top: 1em;
-    height: 90vh;
+    max-height: 87vh;
 }
 
 .daily-input {
@@ -23,5 +24,20 @@
 
     .daily-btn {
         width: 240px;
+    }
+}
+
+@media (max-height: 700px) {
+    .daily {
+        gap: 1em;
+    }
+
+    .button-container {
+        flex-direction: row;
+        gap: 1em;
+    }
+
+    .daily-btn {
+        width: 40vw;
     }
 }

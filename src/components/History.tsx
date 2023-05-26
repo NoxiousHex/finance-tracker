@@ -143,14 +143,7 @@ const History: FC<HistoryProps> = (props) => {
     }
 
     function renderShortcuts(): ReactNode {
-        const shortcutText: string[] = [
-            "Yesterday",
-            "7D",
-            "14D",
-            "30D",
-            "6M",
-            "1Y",
-        ];
+        const shortcutText: string[] = ["1D", "7D", "14D", "30D", "6M", "1Y"];
         const shortcutElements: ReactNode[] = shortcutText.map((text) => (
             <button
                 key={uuid()}

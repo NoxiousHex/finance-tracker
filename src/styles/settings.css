@@ -9,8 +9,15 @@
 
 .settings-currency {
     display: flex;
-    flex-direction: column;
-    gap: 0.5em;
+    gap: 1em;
+    justify-content: center;
+    align-items: center;
+}
+
+select,
+.currency-btn {
+    max-width: 40vw;
+    margin: 0;
 }
 
 .clear-btn {

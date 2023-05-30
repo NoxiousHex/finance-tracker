@@ -23,3 +23,13 @@ select,
 .clear-btn {
     margin-bottom: 0.8em;
 }
+
+@media (min-width: 700px) {
+    .settings-currency {
+        gap: 2rem;
+    }
+    select,
+    .currency-btn {
+        max-width: 26vw;
+    }
+}

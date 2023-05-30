@@ -83,10 +83,11 @@ button:disabled:active {
 
 input,
 select {
-    background-color: #d77a79;
-    color: #1d1d1e;
+    background-color: white;
+    color: black;
     border-radius: 1em;
-    border: none;
+    border: 0px solid black;
+    box-shadow: 0 0 3px rgb(0, 0, 0, 0.1);
     text-align: center;
 }
 
@@ -105,8 +106,7 @@ label {
 
     input,
     select {
-        background-color: white;
-        color: black;
+        border: none;
     }
     input:disabled,
     button:disabled {

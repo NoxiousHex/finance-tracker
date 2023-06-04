@@ -15,7 +15,7 @@ import {
 } from "../utils/utils";
 import "../styles/daily.css";
 import { addDoc, onSnapshot, setDoc, doc } from "firebase/firestore";
-import { dailyCollection } from "../firebase";
+import { dailyCollection, historyCollection } from "../firebase";
 
 interface DailyProps {
     history: storedFinanceObject[];
@@ -116,15 +116,40 @@ const Daily: FC<DailyProps> = (props) => {
     }
 
     async function newDay(): Promise<void> {
+        // Add current day
+        // check to make sure this day hasn't been created yet, for example in case of
+        // connection issue in later setDoc() function which could lead to same day
+        // being stored multiple times
+        // if (last(history).date !== date) {
+        //     console.log("new day saved");
+        //     addToHistory(
+        //         income.intValue,
+        //         spending.intValue,
+        //         balance.intValue,
+        //         date
+        //     );
+        // }
+        addToHistory(
+            income.intValue,
+            spending.intValue,
+            balance.intValue,
+            date
+        );
+
         const timeDiff = history.length
-            ? timeDiffInDays(date, last(history).date)
+            ? timeDiffInDays(
+                  last(history).date,
+                  new Date().toLocaleDateString("en-CA")
+              )
             : 1;
+        console.log(timeDiff);
         // When more than 1 day has passed since the last use fill history with
         // dummy days with balance kept as is for the sake of history calculations
         if (timeDiff > 1) {
             // Two loops to ensure out list of dates is generated correcly we can't rely on stuffing
             // everything inside one loop and deriving it from last history object since update takes time
             const missingDates: string[] = [];
+            console.log(missingDates);
             let prevDay: Date;
             for (let i = 1; i < timeDiff - 1; i++) {
                 i === 1
@@ -135,22 +160,55 @@ const Daily: FC<DailyProps> = (props) => {
                 );
                 missingDates.push(new Date(newDay).toLocaleDateString("en-CA"));
             }
-            for (const date of missingDates) {
-                addToHistory(0, 0, last(history).balance.intValue, date);
+            for (const newDate of missingDates) {
+                addToHistory(0, 0, balance.intValue, newDate);
             }
         }
-        // Add current day
-        // check to make sure this day hasn't been created yet, for example in case of
-        // connection issue in later setDoc() function which could lead to same day
-        // being stored multiple times
-        if (last(history).date !== date) {
-            addToHistory(
-                income.intValue,
-                spending.intValue,
-                balance.intValue,
-                date
-            );
-        }
+
+        // onSnapshot(historyCollection, (snapshot) => {
+        //     const history: storedFinanceObject[] =
+        //         snapshot.docs.map<storedFinanceObject>((doc) => {
+        //             const data = doc.data();
+        //             console.log("Data pulled");
+        //             return {
+        //                 income: data.income,
+        //                 spending: data.spending,
+        //                 balance: data.balance,
+        //                 date: data.date,
+        //             };
+        //         });
+        //     const timeDiff = history.length
+        //         ? timeDiffInDays(
+        //               last(history).date,
+        //               new Date().toLocaleDateString("en-CA")
+        //           )
+        //         : 1;
+        //     console.log(timeDiff);
+        //     // When more than 1 day has passed since the last use fill history with
+        //     // dummy days with balance kept as is for the sake of history calculations
+        //     if (timeDiff > 1) {
+        //         // Two loops to ensure out list of dates is generated correcly we can't rely on stuffing
+        //         // everything inside one loop and deriving it from last history object since update takes time
+        //         const missingDates: string[] = [];
+        //         console.log(missingDates);
+        //         let prevDay: Date;
+        //         for (let i = 1; i < timeDiff - 1; i++) {
+        //             i === 1
+        //                 ? (prevDay = new Date(last(history).date))
+        //                 : (prevDay = new Date(last(missingDates)));
+        //             const newDay: number = new Date().setTime(
+        //                 prevDay.getTime() + 86400000
+        //             );
+        //             missingDates.push(
+        //                 new Date(newDay).toLocaleDateString("en-CA")
+        //             );
+        //         }
+        //         for (const newDate of missingDates) {
+        //             addToHistory(0, 0, last(history).balance, newDate);
+        //         }
+        //     }
+        // });
+
         const dailyRef = doc(dailyCollection, dailyId);
         const dailyCopy: ActiveFinanceObject = { ...daily };
         const newDaily: storedFinanceObject = {

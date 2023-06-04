@@ -31,11 +31,6 @@
     transition: border-color 0.25s;
 }
 
-.nav-link:hover {
-    border-color: white;
-    color: white;
-}
-
 .nav-link:focus,
 .nav-link:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;

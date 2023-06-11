@@ -50,7 +50,12 @@ function CalcAverage(array: any[], type: FinanceLiteral): number {
     }
 
     const validEls = array.length - nullNum;
-    return reducedAmount / validEls;
+
+    if (reducedAmount === 0) {
+        return 0;
+    } else {
+        return reducedAmount / validEls;
+    }
 }
 
 function dateToLocale(date: DateTuple): string[] {

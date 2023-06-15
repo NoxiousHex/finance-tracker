@@ -15,7 +15,7 @@ import {
 } from "../utils/utils";
 import "../styles/daily.css";
 import { addDoc, onSnapshot, setDoc, doc } from "firebase/firestore";
-import { dailyCollection, historyCollection } from "../firebase";
+import { dailyCollection } from "../firebase";
 
 interface DailyProps {
 	history: storedFinanceObject[];

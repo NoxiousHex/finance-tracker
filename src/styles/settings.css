@@ -1,35 +1,37 @@
 .settings {
-    margin-top: 1em;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1em;
+	margin-top: 1em;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 1em;
 }
 
 .settings-currency {
-    display: flex;
-    gap: 1em;
-    justify-content: center;
-    align-items: center;
+	display: flex;
+	gap: 1em;
+	justify-content: center;
+	align-items: center;
 }
 
 select,
 .currency-btn {
-    max-width: 40vw;
-    margin: 0;
+	max-width: 40vw;
+	margin: 0;
 }
 
 .clear-btn {
-    margin-bottom: 0.8em;
+	margin-bottom: 0.8em;
 }
 
 @media (min-width: 700px) {
-    .settings-currency {
-        gap: 2rem;
-    }
-    select,
-    .currency-btn {
-        max-width: 26vw;
-    }
+	.settings {
+	}
+	.settings-currency {
+		gap: 1.85rem;
+	}
+	select,
+	.currency-btn {
+		max-width: 23%;
+	}
 }

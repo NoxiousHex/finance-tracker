@@ -130,11 +130,9 @@ const Daily: FC<DailyProps> = (props) => {
 		}
 
 		const timeDiff = history.length
-			? timeDiffInDays(
-					last(history).date,
-					new Date().toLocaleDateString("en-CA")
-			  )
+			? timeDiffInDays(date, new Date().toLocaleDateString("en-CA"))
 			: 1;
+
 		// When more than 1 day has passed since the last use fill history with
 		// dummy days with balance kept as is for the sake of history calculations
 		if (timeDiff > 1) {

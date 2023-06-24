@@ -31,16 +31,6 @@ const History: FC<HistoryProps> = (props) => {
 		endDate: "",
 	});
 
-	const sortedHistory = history.sort((a, b) => {
-		if (a.date < b.date) {
-			return -1;
-		} else if (a.date > b.date) {
-			return 1;
-		} else {
-			return 0;
-		}
-	});
-
 	const { startDate, endDate } = date;
 
 	const [data, setData] = useState<ActiveFinanceObject>(
@@ -59,7 +49,7 @@ const History: FC<HistoryProps> = (props) => {
 	}
 
 	function handleClick(): void {
-		const trimmedHistory: storedFinanceObject[] = sortedHistory.filter(
+		const trimmedHistory: storedFinanceObject[] = history.filter(
 			(historyObj) =>
 				historyObj.date >= startDate && historyObj.date <= endDate
 		);
@@ -86,8 +76,8 @@ const History: FC<HistoryProps> = (props) => {
 		setShortcutUsed(true);
 		if (text === "1D") {
 			setDate({
-				startDate: last(sortedHistory).date,
-				endDate: last(sortedHistory).date,
+				startDate: last(history).date,
+				endDate: last(history).date,
 			});
 		} else {
 			let days: number = 0;
@@ -174,8 +164,8 @@ const History: FC<HistoryProps> = (props) => {
 		spending: "Average spending",
 	};
 
-	const minDate: string = history.length ? sortedHistory[0].date : "";
-	const maxDate: string = history.length ? last(sortedHistory).date : "";
+	const minDate: string = history.length ? history[0].date : "";
+	const maxDate: string = history.length ? last(history).date : "";
 
 	return (
 		<div className="history">

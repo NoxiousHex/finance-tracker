@@ -6,12 +6,12 @@
 
 .navbar {
     justify-content: space-between;
-    padding: 0.5em 2.25em;
+    padding: 0.5em;
     height: 10vh;
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 0.5em;
+    left: 5vw;
+    right: 6vw;
 }
 
 .nav-link {
@@ -20,6 +20,7 @@
     gap: 0.25em;
     margin: 0;
     padding: 0.5em 1em;
+    width: 75px;
     border-radius: 0.75em;
     border: 1px solid transparent;
     font-weight: 500;
@@ -28,11 +29,6 @@
     text-decoration: inherit;
     cursor: pointer;
     transition: border-color 0.25s;
-}
-
-.nav-link:hover {
-    border-color: white;
-    color: white;
 }
 
 .nav-link:focus,
@@ -54,6 +50,7 @@
     .nav-link {
         flex-direction: row;
         gap: 0.5em;
+        width: auto;
         font-size: 1rem;
     }
 

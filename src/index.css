@@ -3,6 +3,10 @@ body {
     box-sizing: border-box;
 }
 
+*::-webkit-scrollbar {
+    display: none;
+}
+
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
@@ -28,12 +32,14 @@ body {
 }
 
 button,
-a {
+a,
+.history-shortcut {
     user-select: none;
 }
 
 button:active,
-a:active {
+a:active,
+.history-shortcut:active {
     background-color: #8c2a30;
 }
 
@@ -56,6 +62,7 @@ button {
     transition: border-color 0.25s;
 }
 
+a:hover,
 button:hover {
     border-color: black;
 }
@@ -65,12 +72,23 @@ button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
 
+input:disabled,
+button:disabled {
+    cursor: not-allowed;
+    border-color: #bd3c44;
+}
+
+button:disabled:active {
+    background-color: #bd3c44;
+}
+
 input,
 select {
-    background-color: #d77a79;
-    color: #1d1d1e;
+    background-color: white;
+    color: black;
     border-radius: 1em;
-    border: none;
+    border: 0px solid black;
+    box-shadow: 0 0 3px rgb(0, 0, 0, 0.1);
     text-align: center;
 }
 
@@ -83,21 +101,19 @@ label {
         color: rgba(255, 255, 255, 0.87);
         background-color: #181310;
     }
+    a:hover,
     button:hover {
         border-color: white;
     }
 
     input,
     select {
-        background-color: white;
-        color: black;
+        border: none;
     }
-    /* a:hover {
-        color: #747bff;
+    input:disabled,
+    button:disabled {
+        border-color: #bd3c44;
     }
-    button {
-        background-color: #f9f9f9;
-    } */
 }
 
 @media (min-width: 700px) {

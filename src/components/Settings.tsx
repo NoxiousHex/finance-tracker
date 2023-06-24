@@ -5,49 +5,53 @@ import "../styles/settings.css";
 import ClearConfirmation from "./ClearConfirmation";
 
 interface SettingsProps {
-    setCurrencyUsed: Dispatch<SetStateAction<CurrencyObject>>;
+	setCurrencyUsed: Dispatch<SetStateAction<CurrencyObject>>;
 }
 
 export const Settings: FC<SettingsProps> = (props) => {
-    // Related to currency settings
-    const { setCurrencyUsed } = props;
+	// Related to currency settings
+	const { setCurrencyUsed } = props;
 
-    const [selectedCurrency, setSelectedCurrency] = useState<string>("€");
+	const [selectedCurrency, setSelectedCurrency] = useState<string>("€");
 
-    function handleChange(choice: string): void {
-        setSelectedCurrency(choice);
-    }
+	function handleChange(choice: string): void {
+		setSelectedCurrency(choice);
+	}
 
-    function handleClick(): void {
-        const availableCurrencies: CurrencyObject[] = [EUR, USD, GBP];
-        const foundCurrency: CurrencyObject =
-            availableCurrencies.find(
-                ({ symbol }) => symbol === selectedCurrency
-            ) || EUR;
-        setCurrencyUsed(foundCurrency);
-    }
+	function handleClick(): void {
+		const availableCurrencies: CurrencyObject[] = [EUR, USD, GBP];
+		const foundCurrency: CurrencyObject =
+			availableCurrencies.find(
+				({ symbol }) => symbol === selectedCurrency
+			) || EUR;
+		setCurrencyUsed(foundCurrency);
+	}
 
-    // Related to data clearing
+	// Related to data clearing
 
-    const [clear, setClear] = useState<boolean>(false);
+	const [clear, setClear] = useState<boolean>(false);
 
-    const confimation = clear && <ClearConfirmation setClear={setClear} />;
+	const confimation = clear && <ClearConfirmation setClear={setClear} />;
 
-    return (
-        <div className="settings">
-            <label className="settings-currency">
-                Select currency:
-                <select onChange={(e) => handleChange(e.target.value)}>
-                    <option value="€">EUR</option>
-                    <option value="$">USD</option>
-                    <option value="£">GBP</option>
-                </select>
-            </label>
-            <button onClick={handleClick}>Apply</button>
-            <button onClick={() => setClear(true)}>Clear data</button>
-            {confimation}
-        </div>
-    );
+	return (
+		<div className="settings">
+			<label className="settings-currency">
+				Select currency:
+				<select onChange={(e) => handleChange(e.target.value)}>
+					<option value="€">EUR</option>
+					<option value="$">USD</option>
+					<option value="£">GBP</option>
+				</select>
+			</label>
+			<button className="currency-btn" onClick={handleClick}>
+				Apply
+			</button>
+			<button className="clear-btn" onClick={() => setClear(true)}>
+				Clear data
+			</button>
+			{confimation}
+		</div>
+	);
 };
 
 export default Settings;

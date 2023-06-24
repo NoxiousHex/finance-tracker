@@ -1,6 +1,6 @@
 .graph-container {
     display: grid;
-    grid-template: 100px 25vh / 25vw 25vw 25vw;
+    grid-template: 15vh 35vh / 25vw 25vw 25vw;
     gap: 1em;
 }
 
@@ -38,16 +38,15 @@
 
 .graph-text {
     grid-row: 1;
-    margin: 0;
 }
 
 .graph-date {
-    margin: 0 0 1em 0;
+    margin: 0 0 0 0.25em;
 }
 
 @media (min-width: 700px) {
     .graph-container {
-        grid-template: 75px 25vh / 175px 175px 175px;
+        grid-template-columns: 175px 175px 175px;
         gap: 2em;
     }
 }

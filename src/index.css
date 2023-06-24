@@ -3,10 +3,6 @@ body {
     box-sizing: border-box;
 }
 
-*::-webkit-scrollbar {
-    display: none;
-}
-
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
@@ -32,14 +28,12 @@ body {
 }
 
 button,
-a,
-.history-shortcut {
+a {
     user-select: none;
 }
 
 button:active,
-a:active,
-.history-shortcut:active {
+a:active {
     background-color: #8c2a30;
 }
 
@@ -71,16 +65,6 @@ button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
 
-input:disabled,
-button:disabled {
-    cursor: not-allowed;
-    border-color: #bd3c44;
-}
-
-button:disabled:active {
-    background-color: #bd3c44;
-}
-
 input,
 select {
     background-color: #d77a79;
@@ -108,10 +92,12 @@ label {
         background-color: white;
         color: black;
     }
-    input:disabled,
-    button:disabled {
-        border-color: #bd3c44;
+    /* a:hover {
+        color: #747bff;
     }
+    button {
+        background-color: #f9f9f9;
+    } */
 }
 
 @media (min-width: 700px) {

@@ -35,17 +35,17 @@ export const Settings: FC<SettingsProps> = (props) => {
 
 	return (
 		<div className="settings">
-			<label className="settings-currency">
-				Select currency:
+			<label>Select currency:</label>
+			<div className="settings-currency">
 				<select onChange={(e) => handleChange(e.target.value)}>
 					<option value="€">EUR</option>
 					<option value="$">USD</option>
 					<option value="£">GBP</option>
 				</select>
-			</label>
-			<button className="currency-btn" onClick={handleClick}>
-				Apply
-			</button>
+				<button className="currency-btn" onClick={handleClick}>
+					Apply
+				</button>
+			</div>
 			<button className="clear-btn" onClick={() => setClear(true)}>
 				Clear data
 			</button>

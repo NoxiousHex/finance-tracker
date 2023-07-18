@@ -111,6 +111,10 @@ const History: FC<HistoryProps> = (props) => {
 	}, [date]);
 
 	function renderGraph(): ReactNode {
+		const wrongStartDate =
+			startDate < history[0].date || startDate > last(history).date;
+		const wrongEndDate =
+			endDate > last(history).date || endDate < history[0].date;
 		if (!history.length) {
 			return (
 				<div className="date-error-msg">
@@ -119,16 +123,22 @@ const History: FC<HistoryProps> = (props) => {
 			);
 		} else if (!data.date) {
 			return <></>;
-		} else if (
-			startDate < history[0].date ||
-			endDate > last(history).date
-		) {
+		} else if (wrongStartDate || wrongEndDate) {
+			let message;
+
+			if (wrongStartDate && wrongEndDate) {
+				message =
+					"Start and end date are out of bounds. Please select differente dates.";
+			} else if (wrongStartDate) {
+				message =
+					"Start date is out of bounds. Please select a different date.";
+			} else {
+				message =
+					"End date is out of bounds. Please select a different date.";
+			}
 			return (
 				<div className="date-error-msg">
-					<h3>
-						One or both dates are out of bounds. Please select a
-						different date.
-					</h3>
+					<h3>{message}</h3>
 				</div>
 			);
 		} else {

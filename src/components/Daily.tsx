@@ -12,6 +12,7 @@ import {
 	decimalConv,
 	timeDiffInDays,
 	last,
+	financeToIntConv,
 } from "../utils/utils";
 import "../styles/daily.css";
 import { addDoc, onSnapshot, setDoc, doc } from "firebase/firestore";
@@ -65,47 +66,42 @@ const Daily: FC<DailyProps> = (props) => {
 
 	async function handleClick(id: string): Promise<void> {
 		if (input) {
-			const dailyCopy: ActiveFinanceObject = { ...daily };
 			if (id === "add-btn") {
 				const newDaily = {
-					...dailyCopy,
-					income: dailyCopy.income.add(decimalConv(input)),
-					balance: dailyCopy.balance.add(decimalConv(input)),
+					...daily,
+					income: daily.income.add(decimalConv(input)),
+					balance: daily.balance.add(decimalConv(input)),
 				};
-				const newDailyInt = {
-					income: newDaily.income.intValue,
-					balance: newDaily.balance.intValue,
-					spending: newDaily.spending.intValue,
-					date: newDaily.date,
-				};
+
 				try {
 					if (!dailyId) {
-						await addDoc(dailyCollection, newDailyInt);
+						await addDoc(
+							dailyCollection,
+							financeToIntConv(newDaily)
+						);
 					} else {
 						const dailyRef = doc(dailyCollection, dailyId);
-						await setDoc(dailyRef, newDailyInt);
+						await setDoc(dailyRef, financeToIntConv(newDaily));
 					}
 				} catch (err) {
 					console.error(err);
 				}
 			} else if (id === "subtract-btn") {
 				const newDaily = {
-					...dailyCopy,
-					spending: dailyCopy.spending.add(decimalConv(input)),
-					balance: dailyCopy.balance.subtract(decimalConv(input)),
+					...daily,
+					spending: daily.spending.add(decimalConv(input)),
+					balance: daily.balance.subtract(decimalConv(input)),
 				};
-				const newDailyInt = {
-					income: newDaily.income.intValue,
-					balance: newDaily.balance.intValue,
-					spending: newDaily.spending.intValue,
-					date: newDaily.date,
-				};
+
 				try {
 					if (!dailyId) {
-						await addDoc(dailyCollection, newDailyInt);
+						await addDoc(
+							dailyCollection,
+							financeToIntConv(newDaily)
+						);
 					} else {
 						const dailyRef = await doc(dailyCollection, dailyId);
-						await setDoc(dailyRef, newDailyInt);
+						await setDoc(dailyRef, financeToIntConv(newDaily));
 					}
 				} catch (err) {
 					console.error(err);

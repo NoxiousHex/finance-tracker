@@ -6,11 +6,12 @@ import {
 	ActiveFinanceObject,
 	DateTuple,
 	GraphText,
+	Mode,
+	FinanceLiteral,
 } from "../utils/interfaces";
 import Graph from "./Graph";
 import {
 	last,
-	CalcAverage,
 	dateToLocale,
 	constructEmptyFinance,
 	getPastDate,
@@ -33,12 +34,11 @@ const History: FC<HistoryProps> = (props) => {
 
 	const { startDate, endDate } = date;
 
+	const [mode, setMode] = useState<Mode>("cummulative");
+
 	const [data, setData] = useState<ActiveFinanceObject>(
 		constructEmptyFinance(currency, "")
 	);
-
-	// State to keep track of whether shortcut was clicked
-	const [shortcutUsed, setShortcutUsed] = useState(false);
 
 	function handleChange(target: HTMLInputElement): void {
 		if (target.name === "start-date") {
@@ -48,22 +48,33 @@ const History: FC<HistoryProps> = (props) => {
 		}
 	}
 
-	function handleClick(): void {
+	// if both dates exist filter history and render graph
+	function filterHistory(): void {
 		const trimmedHistory: storedFinanceObject[] = history.filter(
 			(historyObj) =>
 				historyObj.date >= startDate && historyObj.date <= endDate
 		);
-		const averageIncome = CalcAverage(trimmedHistory, "income");
-		const averageBalance = CalcAverage(trimmedHistory, "balance");
-		const averageSpending = CalcAverage(trimmedHistory, "spending");
+
+		const historicalIncome = calcForRender(trimmedHistory, "income", mode);
+		const historicalSpending = calcForRender(
+			trimmedHistory,
+			"balance",
+			mode
+		);
+		const historicalBalance = calcForRender(
+			trimmedHistory,
+			"spending",
+			mode
+		);
+
 		const formattedDate = dateToLocale([startDate, endDate]);
 
 		setData(
 			parseFinanceObject(
 				{
-					income: averageIncome,
-					balance: averageBalance,
-					spending: averageSpending,
+					income: historicalIncome,
+					balance: historicalSpending,
+					spending: historicalBalance,
 					date: `${formattedDate[0]} - ${formattedDate[1]}`,
 				},
 				currency
@@ -71,9 +82,38 @@ const History: FC<HistoryProps> = (props) => {
 		);
 	}
 
+	function calcForRender(
+		array: any[],
+		type: FinanceLiteral,
+		mode: Mode
+	): number {
+		let totalAmount = 0;
+		// discount 0s so they don't bring down the average
+		let nullNum = 0;
+		if (type === "income") {
+			totalAmount = array.reduce((a, b) => a + b.income, 0);
+			array.filter((el) => el.income === 0).length;
+		} else if (type === "balance") {
+			totalAmount = array.reduce((a, b) => a + b.balance, 0);
+			nullNum = array.filter((el) => el.balance === 0).length;
+		} else if (type === "spending") {
+			totalAmount = array.reduce((a, b) => a + b.spending, 0);
+			nullNum = array.filter((el) => el.spending === 0).length;
+		}
+
+		const validEls = array.length - nullNum;
+
+		if (totalAmount === 0) {
+			return 0;
+		} else if (mode === "average" || type === "balance") {
+			return totalAmount / validEls;
+		} else {
+			return totalAmount;
+		}
+	}
+
 	function handleShortcut(target: HTMLButtonElement): void {
 		const text = target.name;
-		setShortcutUsed(true);
 		if (text === "1D") {
 			setDate({
 				startDate: last(history).date,
@@ -94,25 +134,28 @@ const History: FC<HistoryProps> = (props) => {
 		}
 	}
 
-	// Graph should auto-render when the shortcut is clicked, but useState
-	// is asynchronous so calling handleClick() inside is not reliable
-	// therefore we need to make sure state has updated before we run it
-	// but we also want to only render it with shortcuts, not when used
-	// uses date selector. Solution would be a custom useState hook that
-	// runs function after state update, but using conditional useEffect is
-	// easier solution, although it requires another state to keep track of whether
-	// shortcut was clicked or not
+	function handleMode(target: HTMLButtonElement): void {
+		const text = target.name;
 
-	useEffect(() => {
-		if (shortcutUsed) {
-			setShortcutUsed(false);
-			handleClick();
+		if (text === "cummulative") {
+			setMode("cummulative");
+		} else if (text === "average") {
+			setMode("average");
 		}
-	}, [date]);
+	}
+
+	// Use effect to automatically render or rerender graph if both dates are supplied
+	useEffect(() => {
+		if (date.startDate && date.endDate) {
+			filterHistory();
+		}
+	}, [date, mode]);
 
 	function renderGraph(): ReactNode {
 		const wrongStartDate =
-			startDate < history[0].date || startDate > last(history).date;
+			startDate < history[0].date ||
+			startDate > last(history).date ||
+			startDate > endDate;
 		const wrongEndDate =
 			endDate > last(history).date || endDate < history[0].date;
 		if (!history.length) {
@@ -121,12 +164,14 @@ const History: FC<HistoryProps> = (props) => {
 					<h3>You don't have any history yet.</h3>
 				</div>
 			);
-		} else if (!data.date) {
+		} else if (!data.date || !date.startDate || !date.endDate) {
 			return <></>;
 		} else if (wrongStartDate || wrongEndDate) {
 			let message;
 
-			if (wrongStartDate && wrongEndDate) {
+			if (startDate > endDate) {
+				message = "Your start and end date order is wrong.";
+			} else if (wrongStartDate && wrongEndDate) {
 				message =
 					"Start and end date are out of bounds. Please select differente dates.";
 			} else if (wrongStartDate) {
@@ -169,17 +214,41 @@ const History: FC<HistoryProps> = (props) => {
 	}
 
 	const graphTextHistory: GraphText = {
-		income: "Average income",
+		income: `${mode === "cummulative" ? "Total" : "Average"} income`,
 		balance: "Average balance",
-		spending: "Average spending",
+		spending: `${mode === "cummulative" ? "Total" : "Average"} spending`,
 	};
 
 	const minDate: string = history.length ? history[0].date : "";
 	const maxDate: string = history.length ? last(history).date : "";
 
+	const activeModeColor = { backgroundColor: "#8c2a30" };
+	const modeCummulative = mode === "cummulative" ? activeModeColor : {};
+	const modeAverage = mode === "average" ? activeModeColor : {};
+
 	return (
 		<div className="history">
 			<h2 className="title">History</h2>
+			<div className="mode-container">
+				<button
+					className="history-shortcut"
+					style={modeCummulative}
+					name="cummulative"
+					disabled={!history.length}
+					onClick={(e) => handleMode(e.currentTarget)}
+				>
+					Cummulative
+				</button>
+				<button
+					className="history-shortcut"
+					style={modeAverage}
+					name="average"
+					disabled={!history.length}
+					onClick={(e) => handleMode(e.currentTarget)}
+				>
+					Average
+				</button>
+			</div>
 			{renderGraph()}
 			<div className="shortcut-container">{renderShortcuts()}</div>
 			<label className="date-label">
@@ -206,9 +275,6 @@ const History: FC<HistoryProps> = (props) => {
 					onChange={(e) => handleChange(e.target)}
 				></input>
 			</label>
-			<button disabled={!history.length} onClick={handleClick}>
-				Select date
-			</button>
 		</div>
 	);
 };

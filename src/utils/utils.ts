@@ -2,7 +2,6 @@ import { parseFinanceObject } from "./currencies";
 import {
 	CurrencyObject,
 	DateTuple,
-	FinanceLiteral,
 	ActiveFinanceObject,
 	storedFinanceObject,
 } from "./interfaces";
@@ -32,30 +31,6 @@ function max(array: number[]): number {
 		if (item > max) max = item;
 	}
 	return max;
-}
-
-function CalcAverage(array: any[], type: FinanceLiteral): number {
-	let reducedAmount = 0;
-	// discount 0s so they don't bring down the average
-	let nullNum = 0;
-	if (type === "income") {
-		reducedAmount = array.reduce((a, b) => a + b.income, 0);
-		array.filter((el) => el.income === 0).length;
-	} else if (type === "balance") {
-		reducedAmount = array.reduce((a, b) => a + b.balance, 0);
-		nullNum = array.filter((el) => el.balance === 0).length;
-	} else if (type === "spending") {
-		reducedAmount = array.reduce((a, b) => a + b.spending, 0);
-		nullNum = array.filter((el) => el.spending === 0).length;
-	}
-
-	const validEls = array.length - nullNum;
-
-	if (reducedAmount === 0) {
-		return 0;
-	} else {
-		return reducedAmount / validEls;
-	}
 }
 
 function dateToLocale(date: DateTuple): string[] {
@@ -119,7 +94,6 @@ export {
 	calculatePercent,
 	decimalConv,
 	max,
-	CalcAverage,
 	dateToLocale,
 	constructEmptyFinance,
 	getPastDate,

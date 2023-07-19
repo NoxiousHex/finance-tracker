@@ -49,7 +49,7 @@ type FinanceLiteral = "income" | "balance" | "spending";
 
 type Route = "daily" | "history" | "settings";
 
-type Mode = "average" | "cummulative";
+type Mode = "average" | "cumulative";
 
 type DateTuple = readonly [string, string];
 

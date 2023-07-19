@@ -34,7 +34,7 @@ const History: FC<HistoryProps> = (props) => {
 
 	const { startDate, endDate } = date;
 
-	const [mode, setMode] = useState<Mode>("cummulative");
+	const [mode, setMode] = useState<Mode>("cumulative");
 
 	const [data, setData] = useState<ActiveFinanceObject>(
 		constructEmptyFinance(currency, "")
@@ -137,8 +137,8 @@ const History: FC<HistoryProps> = (props) => {
 	function handleMode(target: HTMLButtonElement): void {
 		const text = target.name;
 
-		if (text === "cummulative") {
-			setMode("cummulative");
+		if (text === "cumulative") {
+			setMode("cumulative");
 		} else if (text === "average") {
 			setMode("average");
 		}
@@ -214,16 +214,16 @@ const History: FC<HistoryProps> = (props) => {
 	}
 
 	const graphTextHistory: GraphText = {
-		income: `${mode === "cummulative" ? "Total" : "Average"} income`,
+		income: `${mode === "cumulative" ? "Total" : "Average"} income`,
 		balance: "Average balance",
-		spending: `${mode === "cummulative" ? "Total" : "Average"} spending`,
+		spending: `${mode === "cumulative" ? "Total" : "Average"} spending`,
 	};
 
 	const minDate: string = history.length ? history[0].date : "";
 	const maxDate: string = history.length ? last(history).date : "";
 
 	const activeModeColor = { backgroundColor: "#8c2a30" };
-	const modeCummulative = mode === "cummulative" ? activeModeColor : {};
+	const modecumulative = mode === "cumulative" ? activeModeColor : {};
 	const modeAverage = mode === "average" ? activeModeColor : {};
 
 	return (
@@ -232,12 +232,12 @@ const History: FC<HistoryProps> = (props) => {
 			<div className="mode-container">
 				<button
 					className="history-shortcut"
-					style={modeCummulative}
-					name="cummulative"
+					style={modecumulative}
+					name="cumulative"
 					disabled={!history.length}
 					onClick={(e) => handleMode(e.currentTarget)}
 				>
-					Cummulative
+					Cumulative
 				</button>
 				<button
 					className="history-shortcut"

@@ -58,7 +58,8 @@ const Daily: FC<DailyProps> = (props) => {
     }, [daily]);
 
     function handleClick(id: string): void {
-        if (input) {
+        const validInput = parseFloat(input)
+        if (validInput) {
             if (id === "add-btn") {
                 setDaily((prevDaily) => ({
                     ...prevDaily,

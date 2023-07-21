@@ -13,6 +13,7 @@ import {
 	timeDiffInDays,
 	last,
 	financeToIntConv,
+	validateNumericalInput,
 } from "../utils/utils";
 import "../styles/daily.css";
 import { addDoc, onSnapshot, setDoc, doc } from "firebase/firestore";
@@ -24,7 +25,8 @@ interface DailyProps {
 		income: number,
 		spending: number,
 		balance: number,
-		date: string
+		date: string,
+		limit: number
 	) => void;
 	currency: CurrencyObject;
 }
@@ -36,7 +38,7 @@ const Daily: FC<DailyProps> = (props) => {
 		constructEmptyFinance(currency)
 	);
 
-	const { income, balance, spending, date } = daily;
+	const { income, balance, spending, date, limit } = daily;
 
 	const [dailyId, setId] = useState<string>("");
 
@@ -53,6 +55,7 @@ const Daily: FC<DailyProps> = (props) => {
 					balance: data.balance,
 					spending: data.spending,
 					date: data.date,
+					limit: data.limit,
 				};
 			})[0];
 			if (dailyArr) {
@@ -64,9 +67,15 @@ const Daily: FC<DailyProps> = (props) => {
 		};
 	}, [input]);
 
+	function handleChange(value: string): void {
+		const isValid = validateNumericalInput(value);
+		if (isValid) {
+			setInput(value);
+		}
+	}
+
 	async function handleClick(id: string): Promise<void> {
-		const isValidInput = parseFloat(input);
-		if (isValidInput) {
+		if (input) {
 			if (id === "add-btn") {
 				const newDaily = {
 					...daily,
@@ -101,7 +110,7 @@ const Daily: FC<DailyProps> = (props) => {
 							financeToIntConv(newDaily)
 						);
 					} else {
-						const dailyRef = await doc(dailyCollection, dailyId);
+						const dailyRef = doc(dailyCollection, dailyId);
 						await setDoc(dailyRef, financeToIntConv(newDaily));
 					}
 				} catch (err) {
@@ -122,7 +131,8 @@ const Daily: FC<DailyProps> = (props) => {
 				income.intValue,
 				spending.intValue,
 				balance.intValue,
-				date
+				date,
+				limit?.intValue || 0
 			);
 		}
 
@@ -147,7 +157,13 @@ const Daily: FC<DailyProps> = (props) => {
 				missingDates.push(new Date(newDay).toLocaleDateString("en-CA"));
 			}
 			for (const newDate of missingDates) {
-				addToHistory(0, 0, balance.intValue, newDate);
+				addToHistory(
+					0,
+					0,
+					balance.intValue,
+					newDate,
+					limit?.intValue || 0
+				);
 			}
 		}
 
@@ -158,6 +174,7 @@ const Daily: FC<DailyProps> = (props) => {
 			balance: dailyCopy.balance.intValue,
 			spending: 0,
 			date: new Date().toLocaleDateString("en-CA"),
+			limit: dailyCopy.limit?.intValue || 0,
 		};
 		await setDoc(dailyRef, newDaily);
 	}
@@ -191,7 +208,7 @@ const Daily: FC<DailyProps> = (props) => {
 				aria-label="Change balance"
 				className="daily-input"
 				value={input}
-				onChange={(e) => setInput(e.target.value)}
+				onChange={(e) => handleChange(e.target.value)}
 			></input>
 			<div className="button-container">
 				<button

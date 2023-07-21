@@ -47,6 +47,7 @@ function constructEmptyFinance(
 			balance: 0,
 			spending: 0,
 			date: date,
+			limit: 0,
 		},
 		currency
 	);
@@ -84,9 +85,17 @@ function financeToIntConv(obj: ActiveFinanceObject): storedFinanceObject {
 		balance: obj.balance.intValue,
 		spending: obj.spending.intValue,
 		date: obj.date,
+		limit: obj.limit?.intValue || 0,
 	};
 
 	return intObj;
+}
+
+function validateNumericalInput(str: string): boolean {
+	const validChars = /^[\d]*[.,]?[\d]*$/;
+	if (str === "" || str.match(validChars)) {
+		return true;
+	} else return false;
 }
 
 export {
@@ -99,4 +108,5 @@ export {
 	getPastDate,
 	timeDiffInDays,
 	financeToIntConv,
+	validateNumericalInput,
 };

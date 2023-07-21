@@ -5,6 +5,7 @@ interface storedFinanceObject {
 	income: number;
 	balance: number;
 	date: string;
+	limit?: number;
 }
 
 interface ActiveFinanceObject {
@@ -12,6 +13,7 @@ interface ActiveFinanceObject {
 	balance: currency;
 	spending: currency;
 	date: string;
+	limit?: currency;
 }
 
 interface DateRange {

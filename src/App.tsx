@@ -20,13 +20,15 @@ function App() {
 		income: number,
 		spending: number,
 		balance: number,
-		date: string
+		date: string,
+		limit: number
 	): Promise<void> {
 		const item: storedFinanceObject = {
 			income: income,
 			spending: spending,
 			balance: balance,
 			date: date,
+			limit: limit,
 		};
 		try {
 			await addDoc(historyCollection, item);

@@ -65,7 +65,8 @@ const Daily: FC<DailyProps> = (props) => {
 	}, [input]);
 
 	async function handleClick(id: string): Promise<void> {
-		if (input) {
+		const isValidInput = parseFloat(input);
+		if (isValidInput) {
 			if (id === "add-btn") {
 				const newDaily = {
 					...daily,

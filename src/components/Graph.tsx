@@ -15,6 +15,7 @@ interface GraphProps {
 const Graph: FC<GraphProps> = (props) => {
 	const { data, graphText } = props;
 	const { income, balance, spending, date } = data;
+	const limit = data.limit;
 	const graphNumbers = [income.intValue, balance.intValue, spending.intValue];
 	// Get highest value to scale graphs towards to prevent overflow
 	const maximum: number = max(graphNumbers);
@@ -24,6 +25,15 @@ const Graph: FC<GraphProps> = (props) => {
 	const spendingScale: number =
 		calculatePercent(graphNumbers[2], maximum) || 0;
 
+	const incomeHeight = { height: `${income ? incomeScale : 0}%` };
+	const balanceHeight = { height: `${balance ? balanceScale : 0}%` };
+	const spendingHeight = { height: `${spending ? spendingScale : 0}%` };
+
+	const considerLimit =
+		limit && limit?.intValue > 0 && spending > limit
+			? { ...spendingHeight, backgroundColor: "red" }
+			: { ...spendingHeight, backgroundColor: "#c13db7" };
+
 	return (
 		<div className="graph-body">
 			<h2 className="graph-date">{date}</h2>
@@ -31,26 +41,20 @@ const Graph: FC<GraphProps> = (props) => {
 				<h3 className="graph-text">
 					{`${graphText.income}:`} <span>{`${income.format()}`}</span>
 				</h3>
-				<div
-					style={{ height: `${income ? incomeScale : 0}%` }}
-					className="income-graph"
-				></div>
+				<div style={incomeHeight} className="income-graph"></div>
 				<h3 className="graph-text">
 					{`${graphText.balance}:`}{" "}
 					<span>{`${balance.format()}`}</span>
 				</h3>
-				<div
-					style={{ height: `${balance ? balanceScale : 0}%` }}
-					className="balance-graph"
-				></div>
+				<div style={balanceHeight} className="balance-graph"></div>
 				<h3 className="graph-text">
 					{`${graphText.spending}:`}{" "}
-					<span>{`${spending.format()}`}</span>
+					<span>
+						{`${spending.format()}`}
+						{limit?.intValue ? ` / limit: ${limit.format()}` : ""}
+					</span>
 				</h3>
-				<div
-					style={{ height: `${spending ? spendingScale : 0}%` }}
-					className="spending-graph"
-				></div>
+				<div style={considerLimit} className="spending-graph"></div>
 			</div>
 		</div>
 	);

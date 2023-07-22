@@ -66,7 +66,7 @@ const History: FC<HistoryProps> = (props) => {
 			"spending",
 			mode
 		);
-
+		const historicalLimit = calcForRender(trimmedHistory, "limit", mode);
 		const formattedDate = dateToLocale([startDate, endDate]);
 
 		setData(
@@ -76,6 +76,7 @@ const History: FC<HistoryProps> = (props) => {
 					balance: historicalSpending,
 					spending: historicalBalance,
 					date: `${formattedDate[0]} - ${formattedDate[1]}`,
+					limit: historicalLimit,
 				},
 				currency
 			)
@@ -99,6 +100,9 @@ const History: FC<HistoryProps> = (props) => {
 		} else if (type === "spending") {
 			totalAmount = array.reduce((a, b) => a + b.spending, 0);
 			nullNum = array.filter((el) => el.spending === 0).length;
+		} else if (type === "limit") {
+			totalAmount = array.reduce((a, b) => a + b.limit, 0);
+			nullNum = array.filter((el) => el.limit === 0).length;
 		}
 
 		const validEls = array.length - nullNum;

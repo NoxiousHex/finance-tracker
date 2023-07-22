@@ -40,6 +40,7 @@ export const SpendingLimit: FC = () => {
 					onChange={(e) => handleChange(e.target.value)}
 					value={input}
 					className="limit-input"
+					placeholder="Enter limit"
 				></input>
 				<button className="currency-btn" onClick={handleClick}>
 					Set limit

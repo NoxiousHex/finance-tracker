@@ -65,7 +65,7 @@ const Daily: FC<DailyProps> = (props) => {
 		return () => {
 			unsubscribe();
 		};
-	}, [input]);
+	}, []);
 
 	function handleChange(value: string): void {
 		const isValid = validateNumericalInput(value);
@@ -76,14 +76,14 @@ const Daily: FC<DailyProps> = (props) => {
 
 	async function handleClick(id: string): Promise<void> {
 		if (input) {
-			if (id === "add-btn") {
-				const newDaily = {
-					...daily,
-					income: daily.income.add(decimalConv(input)),
-					balance: daily.balance.add(decimalConv(input)),
-				};
-
-				try {
+			try {
+				if (id === "add-btn") {
+					const newDaily = {
+						...daily,
+						income: daily.income.add(decimalConv(input)),
+						balance: daily.balance.add(decimalConv(input)),
+					};
+					setInput("");
 					if (!dailyId) {
 						await addDoc(
 							dailyCollection,
@@ -93,17 +93,13 @@ const Daily: FC<DailyProps> = (props) => {
 						const dailyRef = doc(dailyCollection, dailyId);
 						await setDoc(dailyRef, financeToIntConv(newDaily));
 					}
-				} catch (err) {
-					console.error(err);
-				}
-			} else if (id === "subtract-btn") {
-				const newDaily = {
-					...daily,
-					spending: daily.spending.add(decimalConv(input)),
-					balance: daily.balance.subtract(decimalConv(input)),
-				};
-
-				try {
+				} else if (id === "subtract-btn") {
+					const newDaily = {
+						...daily,
+						spending: daily.spending.add(decimalConv(input)),
+						balance: daily.balance.subtract(decimalConv(input)),
+					};
+					setInput("");
 					if (!dailyId) {
 						await addDoc(
 							dailyCollection,
@@ -113,12 +109,11 @@ const Daily: FC<DailyProps> = (props) => {
 						const dailyRef = doc(dailyCollection, dailyId);
 						await setDoc(dailyRef, financeToIntConv(newDaily));
 					}
-				} catch (err) {
-					console.error(err);
 				}
+			} catch (err) {
+				console.error(err);
 			}
 		}
-		setInput("");
 	}
 
 	async function newDay(): Promise<void> {

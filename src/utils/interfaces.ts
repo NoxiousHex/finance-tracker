@@ -47,7 +47,7 @@ interface DatabaseConfig {
 	appId: string;
 }
 
-type FinanceLiteral = "income" | "balance" | "spending";
+type FinanceLiteral = "income" | "balance" | "spending" | "limit";
 
 type Route = "daily" | "history" | "settings";
 

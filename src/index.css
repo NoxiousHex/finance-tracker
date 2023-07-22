@@ -131,3 +131,9 @@ span {
 		width: calc(450px + 2 * 2em);
 	}
 }
+
+/* UTIL CLASS */
+
+.hidden {
+	display: none;
+}

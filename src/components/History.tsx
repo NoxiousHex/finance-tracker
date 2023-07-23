@@ -68,7 +68,7 @@ const History: FC<HistoryProps> = (props) => {
 		);
 		const historicalLimit = calcForRender(trimmedHistory, "limit", mode);
 		const formattedDate = dateToLocale([startDate, endDate]);
-
+		console.log(historicalLimit);
 		setData(
 			parseFinanceObject(
 				{
@@ -93,7 +93,7 @@ const History: FC<HistoryProps> = (props) => {
 		let nullNum = 0;
 		if (type === "income") {
 			totalAmount = array.reduce((a, b) => a + b.income, 0);
-			array.filter((el) => el.income === 0).length;
+			nullNum = array.filter((el) => el.income === 0).length;
 		} else if (type === "balance") {
 			totalAmount = array.reduce((a, b) => a + b.balance, 0);
 			nullNum = array.filter((el) => el.balance === 0).length;
@@ -150,7 +150,7 @@ const History: FC<HistoryProps> = (props) => {
 
 	// Use effect to automatically render or rerender graph if both dates are supplied
 	useEffect(() => {
-		if (date.startDate && date.endDate) {
+		if (startDate && endDate) {
 			filterHistory();
 		}
 	}, [date, mode]);
@@ -173,7 +173,10 @@ const History: FC<HistoryProps> = (props) => {
 		} else if (wrongStartDate || wrongEndDate) {
 			let message;
 
-			if (startDate > endDate) {
+			if (startDate === "invalid") {
+				message =
+					"This shortcut goes too far into the past. Please select shorter time frame.";
+			} else if (startDate > endDate) {
 				message = "Your start and end date order is wrong.";
 			} else if (wrongStartDate && wrongEndDate) {
 				message =

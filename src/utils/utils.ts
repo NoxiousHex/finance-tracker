@@ -54,7 +54,9 @@ function constructEmptyFinance(
 }
 
 function getPastDate(history: storedFinanceObject[], days: number): DateTuple {
-	if (days > history.length) return ["null", "null"];
+	// RenderGraph method in History will respond with error message if
+	// shortcut goest too far into the past
+	if (days > history.length) return ["invalid", "invalid"];
 	const startDate = history[history.length - days].date;
 	const endDate = last(history).date;
 

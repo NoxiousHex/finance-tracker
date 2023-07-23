@@ -66,6 +66,7 @@ function App() {
 						spending: data.spending,
 						balance: data.balance,
 						date: data.date,
+						limit: data.limit,
 					};
 				});
 			if (historyArr) {

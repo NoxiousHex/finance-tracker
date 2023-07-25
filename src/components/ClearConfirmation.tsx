@@ -1,19 +1,15 @@
-import { FC, Dispatch, SetStateAction, useState } from "react";
+import { FC, Dispatch, SetStateAction } from "react";
 import { deleteDoc, onSnapshot, doc } from "firebase/firestore";
 import { dailyCollection, db } from "../firebase";
-import { ErrorMsg } from "./Error";
 import { ErrorObject } from "../utils/interfaces";
 
 interface ClearConfirmationProps {
 	setClear: Dispatch<SetStateAction<boolean>>;
+	setErrorState: Dispatch<SetStateAction<ErrorObject>>;
 }
 
 export const ClearConfirmation: FC<ClearConfirmationProps> = (props) => {
-	const { setClear } = props;
-	const [renderError, setRenderError] = useState<ErrorObject>({
-		render: false,
-		message: "Deleting data failed. Please try again.",
-	});
+	const { setClear, setErrorState } = props;
 
 	function handleClick() {
 		try {
@@ -24,9 +20,9 @@ export const ClearConfirmation: FC<ClearConfirmationProps> = (props) => {
 				});
 			});
 		} catch {
-			setRenderError({
-				...renderError,
+			setErrorState({
 				render: true,
+				message: "Clearing failed. Please try again.",
 			});
 		} finally {
 			setClear(false);
@@ -34,12 +30,6 @@ export const ClearConfirmation: FC<ClearConfirmationProps> = (props) => {
 	}
 	return (
 		<div>
-			{renderError.render && (
-				<ErrorMsg
-					message={renderError.message}
-					setErrorState={setRenderError}
-				/>
-			)}
 			<h2>Are you sure?</h2>
 			<button className="clear-btn" onClick={handleClick}>
 				Yes

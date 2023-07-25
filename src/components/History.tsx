@@ -14,7 +14,7 @@ import {
 	last,
 	dateToLocale,
 	constructEmptyFinance,
-	getPastDate,
+	getPastDateFromHistory,
 } from "../utils/utils";
 import { v4 as uuid } from "uuid";
 import { parseFinanceObject } from "../utils/currencies";
@@ -68,7 +68,6 @@ const History: FC<HistoryProps> = (props) => {
 		);
 		const historicalLimit = calcForRender(trimmedHistory, "limit", mode);
 		const formattedDate = dateToLocale([startDate, endDate]);
-		console.log(historicalLimit);
 		setData(
 			parseFinanceObject(
 				{
@@ -130,7 +129,7 @@ const History: FC<HistoryProps> = (props) => {
 			else if (text === "30D") days = 30;
 			else if (text === "6M") days = 183; // 182.625
 			else days = 365;
-			const dates: DateTuple = getPastDate(history, days);
+			const dates: DateTuple = getPastDateFromHistory(history, days);
 			setDate({
 				startDate: dates[0],
 				endDate: dates[1],
@@ -173,10 +172,7 @@ const History: FC<HistoryProps> = (props) => {
 		} else if (wrongStartDate || wrongEndDate) {
 			let message;
 
-			if (startDate === "invalid") {
-				message =
-					"This shortcut goes too far into the past. Please select shorter time frame.";
-			} else if (startDate > endDate) {
+			if (startDate > endDate) {
 				message = "Your start and end date order is wrong.";
 			} else if (wrongStartDate && wrongEndDate) {
 				message =
@@ -206,17 +202,21 @@ const History: FC<HistoryProps> = (props) => {
 
 	function renderShortcuts(): ReactNode {
 		const shortcutText: string[] = ["1D", "7D", "14D", "30D", "6M", "1Y"];
-		const shortcutElements: ReactNode[] = shortcutText.map((text) => (
-			<button
-				key={uuid()}
-				className="history-shortcut"
-				name={text}
-				disabled={!history.length}
-				onClick={(e) => handleShortcut(e.currentTarget)}
-			>
-				{text}
-			</button>
-		));
+		const shortcutLength: number[] = [1, 7, 14, 30, 183, 365];
+		const shortcutElements: ReactNode[] = shortcutText.map((text, i) => {
+			const isDisabled = history.length < shortcutLength[i];
+			return (
+				<button
+					key={uuid()}
+					className="history-shortcut"
+					name={text}
+					disabled={!history.length || isDisabled}
+					onClick={(e) => handleShortcut(e.currentTarget)}
+				>
+					{text}
+				</button>
+			);
+		});
 		return shortcutElements;
 	}
 

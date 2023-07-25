@@ -53,10 +53,14 @@ function constructEmptyFinance(
 	);
 }
 
-function getPastDate(history: storedFinanceObject[], days: number): DateTuple {
-	// RenderGraph method in History will respond with error message if
-	// shortcut goest too far into the past
-	if (days > history.length) return ["invalid", "invalid"];
+function getPastDateFromHistory(
+	history: storedFinanceObject[],
+	days: number
+): DateTuple {
+	if (days > history.length) {
+		console.error("You can not go that far into the past!");
+		return ["null", "null"];
+	}
 	const startDate = history[history.length - days].date;
 	const endDate = last(history).date;
 
@@ -107,7 +111,7 @@ export {
 	max,
 	dateToLocale,
 	constructEmptyFinance,
-	getPastDate,
+	getPastDateFromHistory,
 	timeDiffInDays,
 	financeToIntConv,
 	validateNumericalInput,

@@ -51,7 +51,9 @@ export const Settings: FC<SettingsProps> = (props) => {
 
 	const [clear, setClear] = useState<boolean>(false);
 
-	const confimation = clear && <ClearConfirmation setClear={setClear} />;
+	const confimation = clear && (
+		<ClearConfirmation setClear={setClear} setErrorState={setRenderError} />
+	);
 
 	return (
 		<div className="settings">
@@ -61,7 +63,7 @@ export const Settings: FC<SettingsProps> = (props) => {
 					setErrorState={setRenderError}
 				/>
 			)}
-			<SpendingLimit />
+			<SpendingLimit setErrorState={setRenderError} />
 			<label>Select currency:</label>
 			<div className="settings-currency">
 				<select onChange={(e) => handleChange(e.target.value)}>

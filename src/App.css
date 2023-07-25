@@ -1,4 +1,31 @@
 #root {
-    margin: 0 auto;
-    text-align: center;
+	margin: 0 auto;
+	text-align: center;
+	display: grid;
+	grid-template-rows: 87vh 13vh;
+	grid-template-columns: 100vw;
+	grid-template-areas:
+		"main"
+		"navbar";
+	justify-content: center;
+}
+
+main {
+	grid-area: main;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+.navbar {
+	grid-area: navbar;
+}
+
+@media (min-width: 700px) {
+	#root {
+		max-width: 700px;
+		grid-template-areas:
+			"navbar"
+			"main";
+		grid-template-rows: 10vh 90vh;
+	}
 }

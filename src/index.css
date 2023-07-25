@@ -140,9 +140,6 @@ span {
 }
 
 @media (min-width: 700px) {
-	#root {
-		max-width: 700px;
-	}
 	button,
 	input,
 	select {

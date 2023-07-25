@@ -1,18 +1,17 @@
-import { FC, useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { validateNumericalInput } from "../utils/utils";
 import { dailyCollection, db } from "../firebase";
 import { doc, getDocs, updateDoc } from "firebase/firestore";
 import currency from "currency.js";
 import { ErrorObject } from "../utils/interfaces";
-import { ErrorMsg } from "./Error";
 
-export const SpendingLimit: FC = () => {
+interface SpendingLimitProps {
+	setErrorState: Dispatch<SetStateAction<ErrorObject>>;
+}
+
+export const SpendingLimit: FC<SpendingLimitProps> = (props) => {
+	const { setErrorState } = props;
 	const [input, setInput] = useState("");
-	const [renderError, setRenderError] = useState<ErrorObject>({
-		render: false,
-		message:
-			"There was an error while setting the spending limit. Please try again",
-	});
 
 	function handleChange(value: string): void {
 		const isValid = validateNumericalInput(value);
@@ -32,9 +31,10 @@ export const SpendingLimit: FC = () => {
 					limit: currency(input).intValue,
 				});
 			} catch (err) {
-				setRenderError({
-					...renderError,
+				setErrorState({
 					render: true,
+					message:
+						"There was an error while setting the spending limit. Please try again.",
 				});
 			} finally {
 				setInput("");
@@ -44,12 +44,6 @@ export const SpendingLimit: FC = () => {
 
 	return (
 		<div className="settings">
-			{renderError.render && (
-				<ErrorMsg
-					message={renderError.message}
-					setErrorState={setRenderError}
-				/>
-			)}
 			<label>Set daily spending limit:</label>
 			<div className="settings-currency">
 				<input

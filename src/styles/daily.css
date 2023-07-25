@@ -1,43 +1,42 @@
 .daily,
 .button-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5em;
-    align-items: center;
-    overflow: scroll;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5em;
+	align-items: center;
 }
 
 .daily {
-    padding-top: 1em;
-    max-height: 87vh;
+	padding-top: 1em;
+	/* max-height: 87vh; */
 }
 
 .daily-input {
-    color: black;
+	color: black;
 }
 
 @media (min-width: 700px) {
-    .button-container {
-        flex-direction: row;
-        gap: 3em;
-    }
+	.button-container {
+		flex-direction: row;
+		gap: 3em;
+	}
 
-    .daily-btn {
-        width: 240px;
-    }
+	.daily-btn {
+		width: 240px;
+	}
 }
 
 @media (max-height: 700px) {
-    .daily {
-        gap: 1em;
-    }
+	.daily {
+		gap: 1em;
+	}
 
-    .button-container {
-        flex-direction: row;
-        gap: 1em;
-    }
+	.button-container {
+		flex-direction: row;
+		gap: 1em;
+	}
 
-    .daily-btn {
-        width: 40vw;
-    }
+	.daily-btn {
+		width: 40vw;
+	}
 }

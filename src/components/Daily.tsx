@@ -6,6 +6,7 @@ import {
 	ActiveFinanceObject,
 	storedFinanceObject,
 	GraphText,
+	ErrorObject,
 } from "../utils/interfaces";
 import {
 	constructEmptyFinance,
@@ -18,6 +19,7 @@ import {
 import "../styles/daily.css";
 import { addDoc, onSnapshot, setDoc, doc } from "firebase/firestore";
 import { dailyCollection } from "../firebase";
+import { ErrorMsg } from "./Error";
 
 interface DailyProps {
 	history: storedFinanceObject[];
@@ -41,30 +43,43 @@ const Daily: FC<DailyProps> = (props) => {
 	const { income, balance, spending, date, limit } = daily;
 
 	const [dailyId, setId] = useState<string>("");
-
 	const [input, setInput] = useState<string>("");
+	const [renderError, setRenderError] = useState<ErrorObject>({
+		render: false,
+		message: "",
+	});
 
 	useEffect(() => {
-		const unsubscribe = onSnapshot(dailyCollection, (snapshot) => {
-			const dailyArr: storedFinanceObject = snapshot.docs.map((doc) => {
-				const data = doc.data();
-				const id = doc.id;
-				setId(id);
-				return {
-					income: data.income,
-					balance: data.balance,
-					spending: data.spending,
-					date: data.date,
-					limit: data.limit,
-				};
-			})[0];
-			if (dailyArr) {
-				setDaily(parseFinanceObject(dailyArr, currency));
-			}
-		});
-		return () => {
-			unsubscribe();
-		};
+		try {
+			const unsubscribe = onSnapshot(dailyCollection, (snapshot) => {
+				const dailyArr: storedFinanceObject = snapshot.docs.map(
+					(doc) => {
+						const data = doc.data();
+						const id = doc.id;
+						setId(id);
+						return {
+							income: data.income,
+							balance: data.balance,
+							spending: data.spending,
+							date: data.date,
+							limit: data.limit,
+						};
+					}
+				)[0];
+				if (dailyArr) {
+					setDaily(parseFinanceObject(dailyArr, currency));
+				}
+			});
+			return () => {
+				unsubscribe();
+			};
+		} catch (e) {
+			setRenderError({
+				render: true,
+				message:
+					"There was a connection error. Please try again or come back later.",
+			});
+		}
 	}, []);
 
 	function handleChange(value: string): void {
@@ -110,8 +125,12 @@ const Daily: FC<DailyProps> = (props) => {
 						await setDoc(dailyRef, financeToIntConv(newDaily));
 					}
 				}
-			} catch (err) {
-				console.error(err);
+			} catch {
+				setRenderError({
+					render: true,
+					message:
+						"There was an error while updating the database. Please try again.",
+				});
 			}
 		}
 	}
@@ -193,6 +212,12 @@ const Daily: FC<DailyProps> = (props) => {
 
 	return (
 		<div className="daily">
+			{renderError.render && (
+				<ErrorMsg
+					message={renderError.message}
+					setErrorState={setRenderError}
+				/>
+			)}
 			<RenderGraph
 				data={formattedDateDaily}
 				currency={currency}

@@ -1,21 +1,25 @@
 import { FC, useState } from "react";
-import { CurrencyObject } from "../utils/interfaces";
+import { CurrencyObject, ErrorObject } from "../utils/interfaces";
 import { EUR, USD, GBP } from "../utils/currencies";
 import "../styles/settings.css";
 import ClearConfirmation from "./ClearConfirmation";
 import { addDoc, setDoc, doc } from "firebase/firestore";
 import { currencyCollection } from "../firebase";
 import { SpendingLimit } from "./SpendingLimitSetting";
+import { ErrorMsg } from "./Error";
 
 interface SettingsProps {
 	id: string;
 }
 
 export const Settings: FC<SettingsProps> = (props) => {
-	// Related to currency settings
-
-	const [selectedCurrency, setSelectedCurrency] = useState<string>("€");
 	const { id } = props;
+	// State for currency settings
+	const [selectedCurrency, setSelectedCurrency] = useState<string>("€");
+	const [renderError, setRenderError] = useState<ErrorObject>({
+		render: false,
+		message: "",
+	});
 
 	function handleChange(choice: string): void {
 		setSelectedCurrency(choice);
@@ -35,7 +39,11 @@ export const Settings: FC<SettingsProps> = (props) => {
 				await setDoc(currencyRef, foundCurrency);
 			}
 		} catch (err) {
-			console.error(err);
+			setRenderError({
+				render: true,
+				message:
+					"There was a problem in updating currency setting. Please try again.",
+			});
 		}
 	}
 
@@ -47,6 +55,12 @@ export const Settings: FC<SettingsProps> = (props) => {
 
 	return (
 		<div className="settings">
+			{renderError.render && (
+				<ErrorMsg
+					message={renderError.message}
+					setErrorState={setRenderError}
+				/>
+			)}
 			<SpendingLimit />
 			<label>Select currency:</label>
 			<div className="settings-currency">

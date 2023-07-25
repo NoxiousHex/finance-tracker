@@ -47,6 +47,11 @@ interface DatabaseConfig {
 	appId: string;
 }
 
+interface ErrorObject {
+	render: boolean;
+	message: string;
+}
+
 type FinanceLiteral = "income" | "balance" | "spending" | "limit";
 
 type Route = "daily" | "history" | "settings";
@@ -64,6 +69,7 @@ export type {
 	GraphText,
 	DatabaseConfig,
 	FinanceLiteral,
+	ErrorObject,
 	Route,
 	Mode,
 	DateTuple,

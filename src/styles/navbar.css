@@ -6,12 +6,8 @@
 
 .navbar {
 	justify-content: space-between;
-	padding: 0.5em;
-	height: 10vh;
-	position: absolute;
-	bottom: 0.5em;
-	left: 5.5vw;
-	right: 5.5vw;
+	min-height: min-content;
+	padding: 2em 7.5vw 1em;
 }
 
 .nav-link {
@@ -45,6 +41,7 @@
 		position: unset;
 		width: calc(450px + 2 * 2em);
 		margin: 0 auto;
+		padding: 0;
 	}
 
 	.nav-link {

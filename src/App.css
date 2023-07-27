@@ -1,9 +1,9 @@
 #root {
 	margin: 0 auto;
 	text-align: center;
+	min-height: 100vh;
 	display: grid;
-	grid-template-rows: 87vh 13vh;
-	grid-template-columns: 100vw;
+	grid-template: 80vh 20vmin / 100vw;
 	grid-template-areas:
 		"main"
 		"navbar";
@@ -18,6 +18,12 @@ main {
 
 .navbar {
 	grid-area: navbar;
+}
+
+@media (min-height: 700px) {
+	#root {
+		grid-template-rows: 87vh 13vh;
+	}
 }
 
 @media (min-width: 700px) {

@@ -37,8 +37,6 @@ function App() {
 		}
 	}
 
-	console.log(history);
-
 	function sortHistory(arr: storedFinanceObject[]) {
 		// There is no guarantee that data received from Firebase will be ordered correctly by date
 		// so to make sure that functions that might check for last chronological item in history work correctly we need

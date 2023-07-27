@@ -29,10 +29,17 @@ const Graph: FC<GraphProps> = (props) => {
 	const balanceHeight = { height: `${balance ? balanceScale : 0}%` };
 	const spendingHeight = { height: `${spending ? spendingScale : 0}%` };
 
-	const considerLimit =
+	const limitColor =
 		limit && limit?.intValue > 0 && spending > limit
 			? { ...spendingHeight, backgroundColor: "red" }
 			: { ...spendingHeight, backgroundColor: "#c13db7" };
+
+	const renderLimit = limit?.intValue !== 0 && (
+		<>
+			{limit?.intValue && ` / `}
+			<span>{limit?.intValue && `${limit.format()}`}</span>
+		</>
+	);
 
 	return (
 		<div className="graph-body">
@@ -51,10 +58,10 @@ const Graph: FC<GraphProps> = (props) => {
 					{`${graphText.spending}:`}{" "}
 					<span>
 						{`${spending.format()}`}
-						{limit?.intValue ? ` / limit: ${limit.format()}` : ""}
+						{renderLimit}
 					</span>
 				</h3>
-				<div style={considerLimit} className="spending-graph"></div>
+				<div style={limitColor} className="spending-graph"></div>
 			</div>
 		</div>
 	);

@@ -10,10 +10,11 @@ import { ErrorMsg } from "./Error";
 
 interface SettingsProps {
 	id: string;
+	dataLoaded: boolean;
 }
 
 export const Settings: FC<SettingsProps> = (props) => {
-	const { id } = props;
+	const { id, dataLoaded } = props;
 	// State for currency settings
 	const [selectedCurrency, setSelectedCurrency] = useState<string>("€");
 	const [renderError, setRenderError] = useState<ErrorObject>({
@@ -71,11 +72,19 @@ export const Settings: FC<SettingsProps> = (props) => {
 					<option value="$">USD</option>
 					<option value="£">GBP</option>
 				</select>
-				<button className="currency-btn" onClick={handleClick}>
+				<button
+					className="currency-btn"
+					onClick={handleClick}
+					disabled={!dataLoaded}
+				>
 					Apply
 				</button>
 			</div>
-			<button className="clear-btn" onClick={() => setClear(true)}>
+			<button
+				className="clear-btn"
+				onClick={() => setClear(true)}
+				disabled={!dataLoaded}
+			>
 				Clear data
 			</button>
 			{confimation}

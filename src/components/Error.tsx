@@ -1,5 +1,7 @@
 import { FC, useEffect, useState, Dispatch, SetStateAction } from "react";
 import { ErrorObject } from "../utils/interfaces";
+import "../styles/error.css";
+
 interface ErrorMsgProps {
 	message: string;
 	setErrorState: Dispatch<SetStateAction<ErrorObject>>;

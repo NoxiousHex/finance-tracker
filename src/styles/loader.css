@@ -1,0 +1,32 @@
+.loader {
+	margin: 30vh auto;
+	border: 20px solid #eae6e3;
+	border-radius: 50%;
+	border-top: 20px solid #bd3c44;
+	width: 200px;
+	height: 200px;
+	animation: spinner 3s linear infinite;
+}
+
+@keyframes spinner {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@media (min-height: 700px) {
+	.loader {
+		margin: 20vh auto;
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	.loader {
+		border: 20px solid #181310;
+		border-top: 20px solid #bd3c44;
+	}
+}

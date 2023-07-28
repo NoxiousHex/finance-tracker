@@ -9,12 +9,13 @@ import Settings from "./components/Settings";
 import { addDoc, onSnapshot } from "firebase/firestore";
 import { currencyCollection, historyCollection } from "./firebase";
 import { last } from "./utils/utils";
+import { Loader } from "./components/Loader";
 
 function App() {
 	const [history, setHistory] = useState<storedFinanceObject[]>([]);
-	const [page, setPage] = useState<Route>("daily");
-
 	const [currencyUsed, setCurrencyUsed] = useState<CurrencyObject>(EUR);
+	const [dataLoaded, setDataLoaded] = useState<boolean>(false);
+	const [page, setPage] = useState<Route>("loading");
 
 	async function newHistoryItem(
 		income: number,
@@ -70,6 +71,9 @@ function App() {
 			if (historyArr) {
 				setHistory(sortHistory(historyArr));
 			}
+			if (!dataLoaded) {
+				setDataLoaded(true);
+			}
 			return () => {
 				unsubscribe();
 			};
@@ -101,25 +105,38 @@ function App() {
 		};
 	}, []);
 
-	const renderRoute =
-		page === "daily" ? (
-			<Daily
-				history={history}
-				addToHistory={newHistoryItem}
-				currency={currencyUsed}
-			/>
-		) : page === "history" ? (
-			<History history={history} currency={currencyUsed} />
-		) : page === "settings" ? (
-			<Settings id={currencyUsed.id || ""} />
-		) : (
-			<h2>Something went wrong</h2>
-		);
+	function renderRoute() {
+		if (page === "loading" && dataLoaded) {
+			setPage("daily");
+		} else if (page === "loading") {
+			return <Loader />;
+		} else if (page === "daily") {
+			return (
+				<Daily
+					history={history}
+					addToHistory={newHistoryItem}
+					currency={currencyUsed}
+				/>
+			);
+		} else if (page === "history") {
+			return (
+				<History
+					history={history}
+					currency={currencyUsed}
+					dataLoaded={dataLoaded}
+				/>
+			);
+		} else if (page === "settings") {
+			return (
+				<Settings id={currencyUsed.id || ""} dataLoaded={dataLoaded} />
+			);
+		}
+	}
 
 	return (
 		<>
 			<Navbar page={page} setPage={setPage} />
-			<main>{renderRoute}</main>
+			<main>{renderRoute()}</main>
 		</>
 	);
 }

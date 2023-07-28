@@ -54,7 +54,7 @@ interface ErrorObject {
 
 type FinanceLiteral = "income" | "balance" | "spending" | "limit";
 
-type Route = "daily" | "history" | "settings";
+type Route = "loading" | "daily" | "history" | "settings";
 
 type Mode = "average" | "cumulative";
 

@@ -105,20 +105,6 @@ span {
 	display: block;
 }
 
-.error-msg {
-	position: fixed;
-	top: 15px;
-	right: 15px;
-	padding: 0 1em;
-	cursor: pointer;
-	user-select: none;
-	-webkit-user-select: none;
-}
-
-.error-msg > h3 {
-	color: white;
-}
-
 @media (prefers-color-scheme: dark) {
 	:root {
 		color: rgba(255, 255, 255, 0.87);

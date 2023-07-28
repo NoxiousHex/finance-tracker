@@ -1,0 +1,26 @@
+.error-msg {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	padding: 0 1em;
+	cursor: pointer;
+	user-select: none;
+	-webkit-user-select: none;
+	border-radius: 0;
+	border-bottom-left-radius: 0.5em;
+	border-bottom-right-radius: 0.5em;
+}
+
+.error-msg > h3 {
+	color: white;
+}
+
+@media (min-width: 700px) {
+	.error-msg {
+		top: 15px;
+		right: 15px;
+		left: unset;
+		border-radius: 0.5em;
+	}
+}

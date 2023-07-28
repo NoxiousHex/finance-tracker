@@ -44,6 +44,7 @@ const Daily: FC<DailyProps> = (props) => {
 
 	const [dailyId, setId] = useState<string>("");
 	const [input, setInput] = useState<string>("");
+	const [dataLoaded, setDataLoaded] = useState<boolean>(false);
 	const [renderError, setRenderError] = useState<ErrorObject>({
 		render: false,
 		message: "",
@@ -68,6 +69,9 @@ const Daily: FC<DailyProps> = (props) => {
 				)[0];
 				if (dailyArr) {
 					setDaily(parseFinanceObject(dailyArr, currency));
+				}
+				if (!dataLoaded) {
+					setDataLoaded(true);
 				}
 			});
 			return () => {
@@ -235,6 +239,7 @@ const Daily: FC<DailyProps> = (props) => {
 					className="daily-btn"
 					id="add-btn"
 					onClick={(e) => handleClick(e.currentTarget.id)}
+					disabled={!dataLoaded}
 				>
 					Add
 				</button>
@@ -242,6 +247,7 @@ const Daily: FC<DailyProps> = (props) => {
 					className="daily-btn"
 					id="subtract-btn"
 					onClick={(e) => handleClick(e.currentTarget.id)}
+					disabled={!dataLoaded}
 				>
 					Subtract
 				</button>

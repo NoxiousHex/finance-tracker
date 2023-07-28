@@ -19,14 +19,16 @@ import {
 import { v4 as uuid } from "uuid";
 import { parseFinanceObject } from "../utils/currencies";
 import "../styles/history.css";
+import { Loader } from "./Loader";
 
 interface HistoryProps {
 	history: storedFinanceObject[];
 	currency: CurrencyObject;
+	dataLoaded: boolean;
 }
 
 const History: FC<HistoryProps> = (props) => {
-	const { history, currency } = props;
+	const { history, currency, dataLoaded } = props;
 	const [date, setDate] = useState<DateRange>({
 		startDate: "",
 		endDate: "",
@@ -233,7 +235,9 @@ const History: FC<HistoryProps> = (props) => {
 	const modecumulative = mode === "cumulative" ? activeModeColor : {};
 	const modeAverage = mode === "average" ? activeModeColor : {};
 
-	return (
+	return !dataLoaded ? (
+		<Loader />
+	) : (
 		<div className="history">
 			<h2 className="title">History</h2>
 			<div className="mode-container">

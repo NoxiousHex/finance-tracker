@@ -15,7 +15,7 @@
 }
 
 select,
-.currency-btn,
+.settings-btn,
 .limit-input {
 	max-width: 40vw;
 	margin: 0;
@@ -30,7 +30,7 @@ select,
 		gap: 1.85rem;
 	}
 	select,
-	.currency-btn,
+	.settings-btn,
 	.limit-input {
 		max-width: 23%;
 	}

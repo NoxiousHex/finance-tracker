@@ -30,7 +30,7 @@ const Graph: FC<GraphProps> = (props) => {
 	const spendingHeight = { height: `${spending ? spendingScale : 0}%` };
 
 	const limitColor =
-		limit && limit?.intValue > 0 && spending > limit
+		limit && limit?.intValue > 0 && spending.intValue > limit.intValue
 			? { ...spendingHeight, backgroundColor: "red" }
 			: { ...spendingHeight, backgroundColor: "#c13db7" };
 

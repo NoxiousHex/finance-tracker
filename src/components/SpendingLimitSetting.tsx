@@ -52,7 +52,7 @@ export const SpendingLimit: FC<SpendingLimitProps> = (props) => {
 					className="limit-input"
 					placeholder="Enter limit"
 				></input>
-				<button className="currency-btn" onClick={handleClick}>
+				<button className="settings-btn" onClick={handleClick}>
 					Set limit
 				</button>
 			</div>

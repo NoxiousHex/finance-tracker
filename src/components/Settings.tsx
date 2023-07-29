@@ -7,6 +7,7 @@ import { addDoc, setDoc, doc } from "firebase/firestore";
 import { currencyCollection } from "../firebase";
 import { SpendingLimit } from "./SpendingLimitSetting";
 import { ErrorMsg } from "./Error";
+import { Loader } from "./Loader";
 
 interface SettingsProps {
 	id: string;
@@ -56,7 +57,9 @@ export const Settings: FC<SettingsProps> = (props) => {
 		<ClearConfirmation setClear={setClear} setErrorState={setRenderError} />
 	);
 
-	return (
+	return !dataLoaded ? (
+		<Loader />
+	) : (
 		<div className="settings">
 			{renderError.render && (
 				<ErrorMsg
@@ -72,19 +75,11 @@ export const Settings: FC<SettingsProps> = (props) => {
 					<option value="$">USD</option>
 					<option value="£">GBP</option>
 				</select>
-				<button
-					className="currency-btn"
-					onClick={handleClick}
-					disabled={!dataLoaded}
-				>
+				<button className="settings-btn" onClick={handleClick}>
 					Apply
 				</button>
 			</div>
-			<button
-				className="clear-btn"
-				onClick={() => setClear(true)}
-				disabled={!dataLoaded}
-			>
+			<button className="clear-btn" onClick={() => setClear(true)}>
 				Clear data
 			</button>
 			{confimation}

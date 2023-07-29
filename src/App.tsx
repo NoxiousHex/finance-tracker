@@ -9,13 +9,12 @@ import Settings from "./components/Settings";
 import { addDoc, onSnapshot } from "firebase/firestore";
 import { currencyCollection, historyCollection } from "./firebase";
 import { last } from "./utils/utils";
-import { Loader } from "./components/Loader";
 
 function App() {
 	const [history, setHistory] = useState<storedFinanceObject[]>([]);
 	const [currencyUsed, setCurrencyUsed] = useState<CurrencyObject>(EUR);
 	const [dataLoaded, setDataLoaded] = useState<boolean>(false);
-	const [page, setPage] = useState<Route>("loading");
+	const [page, setPage] = useState<Route>("daily");
 
 	async function newHistoryItem(
 		income: number,
@@ -106,11 +105,7 @@ function App() {
 	}, []);
 
 	function renderRoute() {
-		if (page === "loading" && dataLoaded) {
-			setPage("daily");
-		} else if (page === "loading") {
-			return <Loader />;
-		} else if (page === "daily") {
+		if (page === "daily") {
 			return (
 				<Daily
 					history={history}

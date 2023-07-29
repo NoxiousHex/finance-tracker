@@ -20,6 +20,7 @@ import "../styles/daily.css";
 import { addDoc, onSnapshot, setDoc, doc } from "firebase/firestore";
 import { dailyCollection } from "../firebase";
 import { ErrorMsg } from "./Error";
+import { Loader } from "./Loader";
 
 interface DailyProps {
 	history: storedFinanceObject[];
@@ -214,7 +215,9 @@ const Daily: FC<DailyProps> = (props) => {
 		date: new Date(date).toLocaleDateString(),
 	};
 
-	return (
+	return !dataLoaded ? (
+		<Loader />
+	) : (
 		<div className="daily">
 			{renderError.render && (
 				<ErrorMsg
@@ -239,7 +242,6 @@ const Daily: FC<DailyProps> = (props) => {
 					className="daily-btn"
 					id="add-btn"
 					onClick={(e) => handleClick(e.currentTarget.id)}
-					disabled={!dataLoaded}
 				>
 					Add
 				</button>
@@ -247,7 +249,6 @@ const Daily: FC<DailyProps> = (props) => {
 					className="daily-btn"
 					id="subtract-btn"
 					onClick={(e) => handleClick(e.currentTarget.id)}
-					disabled={!dataLoaded}
 				>
 					Subtract
 				</button>

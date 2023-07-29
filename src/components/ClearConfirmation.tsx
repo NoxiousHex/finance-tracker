@@ -34,7 +34,9 @@ export const ClearConfirmation: FC<ClearConfirmationProps> = (props) => {
 			<button className="clear-btn" onClick={handleClick}>
 				Yes
 			</button>
-			<button onClick={() => setClear(false)}>No, stop!</button>
+			<button className="clear-btn" onClick={() => setClear(false)}>
+				No, stop!
+			</button>
 		</div>
 	);
 };

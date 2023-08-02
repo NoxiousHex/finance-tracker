@@ -239,7 +239,6 @@ const History: FC<HistoryProps> = (props) => {
 		<Loader />
 	) : (
 		<div className="history">
-			<h2 className="title">History</h2>
 			<div className="mode-container">
 				<button
 					className="history-shortcut"

@@ -171,6 +171,7 @@ const Daily: FC<DailyProps> = (props) => {
 					? (prevDay = new Date(date))
 					: (prevDay = new Date(last(missingDates)));
 				const newDay: number = new Date().setTime(
+					// previous day + 24 hours in ms
 					prevDay.getTime() + 86400000
 				);
 				missingDates.push(new Date(newDay).toLocaleDateString("en-CA"));
@@ -186,6 +187,8 @@ const Daily: FC<DailyProps> = (props) => {
 			}
 		}
 
+		// Current day has been added to history, if applicable missing
+		// dates have been created. Time to create new current day object
 		const dailyRef = doc(dailyCollection, dailyId);
 		const dailyCopy: ActiveFinanceObject = { ...daily };
 		const newDaily: storedFinanceObject = {

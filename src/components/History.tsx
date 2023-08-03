@@ -35,6 +35,7 @@ const History: FC<HistoryProps> = (props) => {
 	const [data, setData] = useState<ActiveFinanceObject>(
 		constructEmptyFinance(currency, "")
 	);
+	const [dataArr, setDataArr] = useState<ReactNode[]>([]);
 
 	function handleChange(target: HTMLInputElement): void {
 		if (target.name === "start-date") {
@@ -58,31 +59,55 @@ const History: FC<HistoryProps> = (props) => {
 				historyObj.date >= startDate && historyObj.date <= endDate
 		);
 
-		const historicalIncome = calcForRender(trimmedHistory, "income", mode);
-		const historicalSpending = calcForRender(
-			trimmedHistory,
-			"balance",
-			mode
-		);
-		const historicalBalance = calcForRender(
-			trimmedHistory,
-			"spending",
-			mode
-		);
-		const historicalLimit = calcForRender(trimmedHistory, "limit", mode);
-		const formattedDate = dateToLocale([startDate, endDate]);
-		setData(
-			parseFinanceObject(
-				{
-					income: historicalIncome,
-					balance: historicalSpending,
-					spending: historicalBalance,
-					date: `${formattedDate[0]} - ${formattedDate[1]}`,
-					limit: historicalLimit,
-				},
-				currency
-			)
-		);
+		if (mode !== "individual") {
+			const historicalIncome = calcForRender(
+				trimmedHistory,
+				"income",
+				mode
+			);
+			const historicalSpending = calcForRender(
+				trimmedHistory,
+				"balance",
+				mode
+			);
+			const historicalBalance = calcForRender(
+				trimmedHistory,
+				"spending",
+				mode
+			);
+			const historicalLimit = calcForRender(
+				trimmedHistory,
+				"limit",
+				mode
+			);
+			const formattedDate = dateToLocale([startDate, endDate]);
+			setData(
+				parseFinanceObject(
+					{
+						income: historicalIncome,
+						balance: historicalSpending,
+						spending: historicalBalance,
+						date: `${formattedDate[0]} - ${formattedDate[1]}`,
+						limit: historicalLimit,
+					},
+					currency
+				)
+			);
+		} else {
+			const activeHistory = trimmedHistory.map((day) =>
+				parseFinanceObject(day, currency)
+			);
+			const graphArray: ReactNode[] = activeHistory.map((day) => {
+				return (
+					<Graph
+						data={day}
+						currency={currency}
+						graphText={graphTextHistory}
+					/>
+				);
+			});
+			setDataArr(graphArray);
+		}
 	}
 
 	function calcForRender(
@@ -118,7 +143,7 @@ const History: FC<HistoryProps> = (props) => {
 		}
 	}
 
-	function renderGraph(): ReactNode {
+	function renderGraph(): ReactNode | ReactNode[] {
 		const wrongStartDate =
 			startDate < history[0].date ||
 			startDate > last(history).date ||
@@ -154,13 +179,17 @@ const History: FC<HistoryProps> = (props) => {
 				</div>
 			);
 		} else {
-			return (
-				<Graph
-					data={data}
-					currency={currency}
-					graphText={graphTextHistory}
-				/>
-			);
+			if (mode !== "individual") {
+				return (
+					<Graph
+						data={data}
+						currency={currency}
+						graphText={graphTextHistory}
+					/>
+				);
+			} else {
+				return dataArr;
+			}
 		}
 	}
 

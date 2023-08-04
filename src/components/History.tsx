@@ -15,6 +15,7 @@ import "../styles/history.css";
 import { Loader } from "./Loader";
 import { HistoryShortcuts } from "./HistoryShortcuts";
 import { HistoryMode } from "./HistoryMode";
+import { v4 as uuid } from "uuid";
 
 interface HistoryProps {
 	history: storedFinanceObject[];
@@ -97,12 +98,22 @@ const History: FC<HistoryProps> = (props) => {
 			const activeHistory = trimmedHistory.map((day) =>
 				parseFinanceObject(day, currency)
 			);
-			const graphArray: ReactNode[] = activeHistory.map((day) => {
+			const graphArray: ReactNode[] = activeHistory.map((day, index) => {
+				// Make sure margin is added between each graph if rendered
+				// in individual mode, but do not add on last element
+				let optionalClass: string;
+				if (index < activeHistory.length - 1) {
+					optionalClass = "individual-graph";
+				} else {
+					optionalClass = "";
+				}
+				const id = uuid();
 				return (
 					<Graph
+						key={id}
 						data={day}
-						currency={currency}
 						graphText={graphTextHistory}
+						optionalClass={optionalClass}
 					/>
 				);
 			});
@@ -180,13 +191,7 @@ const History: FC<HistoryProps> = (props) => {
 			);
 		} else {
 			if (mode !== "individual") {
-				return (
-					<Graph
-						data={data}
-						currency={currency}
-						graphText={graphTextHistory}
-					/>
-				);
+				return <Graph data={data} graphText={graphTextHistory} />;
 			} else {
 				return dataArr;
 			}

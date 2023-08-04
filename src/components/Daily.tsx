@@ -228,11 +228,7 @@ const Daily: FC<DailyProps> = (props) => {
 					setErrorState={setRenderError}
 				/>
 			)}
-			<RenderGraph
-				data={formattedDateDaily}
-				currency={currency}
-				graphText={graphTextDaily}
-			/>
+			<RenderGraph data={formattedDateDaily} graphText={graphTextDaily} />
 			<input
 				placeholder="Change balance"
 				aria-label="Change balance"

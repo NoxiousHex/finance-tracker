@@ -8,8 +8,8 @@ import {
 import "../styles/graph.css";
 interface GraphProps {
 	data: ActiveFinanceObject;
-	currency: CurrencyObject;
 	graphText: GraphText;
+	optionalClass?: string;
 }
 
 const Graph: FC<GraphProps> = (props) => {
@@ -42,7 +42,7 @@ const Graph: FC<GraphProps> = (props) => {
 	);
 
 	return (
-		<div className="graph-body">
+		<div className={`graph-body ${props.optionalClass ?? ""}`}>
 			<h2 className="graph-date">{date}</h2>
 			<div className="graph-container">
 				<h3 className="graph-text">

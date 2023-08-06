@@ -167,7 +167,7 @@ const History: FC<HistoryProps> = (props) => {
 					<h3>You don't have any history yet.</h3>
 				</div>
 			);
-		} else if (!data.date || !date.startDate || !date.endDate) {
+		} else if (!date.startDate || !date.endDate) {
 			return <></>;
 		} else if (wrongStartDate || wrongEndDate) {
 			let message;

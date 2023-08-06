@@ -1,10 +1,6 @@
 import { FC } from "react";
 import { calculatePercent, max } from "../utils/utils";
-import {
-	GraphText,
-	CurrencyObject,
-	ActiveFinanceObject,
-} from "../utils/interfaces";
+import { GraphText, ActiveFinanceObject } from "../utils/interfaces";
 import "../styles/graph.css";
 interface GraphProps {
 	data: ActiveFinanceObject;

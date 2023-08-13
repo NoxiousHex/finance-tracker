@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import Daily from "./components/Daily";
 import History from "./components/History";
@@ -9,12 +9,14 @@ import Settings from "./components/Settings";
 import { addDoc, onSnapshot } from "firebase/firestore";
 import { currencyCollection, historyCollection } from "./firebase";
 import { last } from "./utils/utils";
+import { ScrollButton } from "./components/ScrollButton";
 
 function App() {
 	const [history, setHistory] = useState<storedFinanceObject[]>([]);
 	const [currencyUsed, setCurrencyUsed] = useState<CurrencyObject>(EUR);
 	const [dataLoaded, setDataLoaded] = useState<boolean>(false);
 	const [page, setPage] = useState<Route>("daily");
+	const mainSection = useRef<HTMLElement>(null);
 
 	async function newHistoryItem(
 		income: number,
@@ -128,10 +130,13 @@ function App() {
 		}
 	}
 
+	console.log(mainSection.current);
+
 	return (
 		<>
 			<Navbar page={page} setPage={setPage} />
-			<main>{renderRoute()}</main>
+			<main ref={mainSection}>{renderRoute()}</main>
+			<ScrollButton mainRef={mainSection.current} />
 		</>
 	);
 }

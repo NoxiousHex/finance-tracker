@@ -1,5 +1,5 @@
 import { FC, Dispatch, SetStateAction, useState, useEffect } from "react";
-import { Route } from "../utils/interfaces";
+import { Route } from "../utils/enums";
 import "../styles/navbar.css";
 import { MdSunny, MdMenuBook, MdSettingsSuggest } from "react-icons/md";
 
@@ -39,7 +39,7 @@ const Navbar: FC<NavbarProps> = (props) => {
 		<nav className={`navbar ${isHidden}`}>
 			<a
 				className="nav-link"
-				onClick={() => setPage("daily")}
+				onClick={() => setPage(Route.daily)}
 				style={dailyActive}
 			>
 				<MdSunny className="nav-icon" />
@@ -47,7 +47,7 @@ const Navbar: FC<NavbarProps> = (props) => {
 			</a>
 			<a
 				className="nav-link"
-				onClick={() => setPage("history")}
+				onClick={() => setPage(Route.history)}
 				style={historyActive}
 			>
 				<MdMenuBook className="nav-icon" />
@@ -55,7 +55,7 @@ const Navbar: FC<NavbarProps> = (props) => {
 			</a>
 			<a
 				className="nav-link"
-				onClick={() => setPage("settings")}
+				onClick={() => setPage(Route.settings)}
 				style={settingsActive}
 			>
 				<MdSettingsSuggest className="nav-icon" />

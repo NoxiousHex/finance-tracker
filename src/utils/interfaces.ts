@@ -1,4 +1,5 @@
 import currency from "currency.js";
+import { CurrencySymbol } from "./enums";
 
 interface storedFinanceObject {
 	spending: number;
@@ -20,8 +21,6 @@ interface DateRange {
 	startDate: string;
 	endDate: string;
 }
-
-type CurrencySymbol = "€" | "£" | "$";
 
 interface CurrencyObject {
 	fromCents: boolean;
@@ -52,12 +51,6 @@ interface ErrorObject {
 	message: string;
 }
 
-type FinanceLiteral = "income" | "balance" | "spending" | "limit";
-
-type Route = "daily" | "history" | "settings";
-
-type Mode = "average" | "cumulative" | "individual";
-
 type DateTuple = readonly [string, string];
 
 export type {
@@ -68,9 +61,6 @@ export type {
 	CurrencyObject,
 	GraphText,
 	DatabaseConfig,
-	FinanceLiteral,
 	ErrorObject,
-	Route,
-	Mode,
 	DateTuple,
 };

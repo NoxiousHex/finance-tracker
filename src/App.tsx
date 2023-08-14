@@ -3,7 +3,8 @@ import "./App.css";
 import Daily from "./components/Daily";
 import History from "./components/History";
 import Navbar from "./components/Navbar";
-import { Route, storedFinanceObject, CurrencyObject } from "./utils/interfaces";
+import { storedFinanceObject, CurrencyObject } from "./utils/interfaces";
+import { Route } from "./utils/enums";
 import { EUR } from "./utils/currencies";
 import Settings from "./components/Settings";
 import { addDoc, onSnapshot } from "firebase/firestore";
@@ -15,7 +16,7 @@ function App() {
 	const [history, setHistory] = useState<storedFinanceObject[]>([]);
 	const [currencyUsed, setCurrencyUsed] = useState<CurrencyObject>(EUR);
 	const [dataLoaded, setDataLoaded] = useState<boolean>(false);
-	const [page, setPage] = useState<Route>("daily");
+	const [page, setPage] = useState<Route>(Route.daily);
 	const mainSection = useRef<HTMLElement>(null);
 
 	async function newHistoryItem(
@@ -107,7 +108,7 @@ function App() {
 	}, []);
 
 	function renderRoute() {
-		if (page === "daily") {
+		if (page === Route.daily) {
 			return (
 				<Daily
 					history={history}
@@ -115,7 +116,7 @@ function App() {
 					currency={currencyUsed}
 				/>
 			);
-		} else if (page === "history") {
+		} else if (page === Route.history) {
 			return (
 				<History
 					history={history}
@@ -123,7 +124,7 @@ function App() {
 					dataLoaded={dataLoaded}
 				/>
 			);
-		} else if (page === "settings") {
+		} else if (page === Route.settings) {
 			return (
 				<Settings id={currencyUsed.id || ""} dataLoaded={dataLoaded} />
 			);

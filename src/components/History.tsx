@@ -5,9 +5,9 @@ import {
 	DateRange,
 	ActiveFinanceObject,
 	GraphText,
-	Mode,
-	FinanceLiteral,
 } from "../utils/interfaces";
+import { Mode } from "../utils/enums";
+import { FinanceLiteral } from "../utils/enums";
 import Graph from "./Graph";
 import { last, dateToLocale, constructEmptyFinance } from "../utils/utils";
 import { parseFinanceObject } from "../utils/currencies";
@@ -31,7 +31,7 @@ const History: FC<HistoryProps> = (props) => {
 	});
 	const { startDate, endDate } = date;
 
-	const [mode, setMode] = useState<Mode>("cumulative");
+	const [mode, setMode] = useState<Mode>(Mode.cumulative);
 
 	const [data, setData] = useState<ActiveFinanceObject>(
 		constructEmptyFinance(currency, "")
@@ -63,22 +63,22 @@ const History: FC<HistoryProps> = (props) => {
 		if (mode !== "individual") {
 			const historicalIncome = calcForRender(
 				trimmedHistory,
-				"income",
+				FinanceLiteral.income,
 				mode
 			);
 			const historicalSpending = calcForRender(
 				trimmedHistory,
-				"balance",
+				FinanceLiteral.balance,
 				mode
 			);
 			const historicalBalance = calcForRender(
 				trimmedHistory,
-				"spending",
+				FinanceLiteral.spending,
 				mode
 			);
 			const historicalLimit = calcForRender(
 				trimmedHistory,
-				"limit",
+				FinanceLiteral.limit,
 				mode
 			);
 			const formattedDate = dateToLocale([startDate, endDate]);
@@ -129,16 +129,16 @@ const History: FC<HistoryProps> = (props) => {
 		let totalAmount = 0;
 		// discount 0s so they don't bring down the average
 		let nullNum = 0;
-		if (type === "income") {
+		if (type === FinanceLiteral.income) {
 			totalAmount = array.reduce((a, b) => a + b.income, 0);
 			nullNum = array.filter((el) => el.income === 0).length;
-		} else if (type === "balance") {
+		} else if (type === FinanceLiteral.balance) {
 			totalAmount = array.reduce((a, b) => a + b.balance, 0);
 			nullNum = array.filter((el) => el.balance === 0).length;
-		} else if (type === "spending") {
+		} else if (type === FinanceLiteral.spending) {
 			totalAmount = array.reduce((a, b) => a + b.spending, 0);
 			nullNum = array.filter((el) => el.spending === 0).length;
-		} else if (type === "limit") {
+		} else if (type === FinanceLiteral.limit) {
 			totalAmount = array.reduce((a, b) => a + b.limit, 0);
 			nullNum = array.filter((el) => el.limit === 0).length;
 		}
@@ -147,7 +147,7 @@ const History: FC<HistoryProps> = (props) => {
 
 		if (totalAmount === 0) {
 			return 0;
-		} else if (mode === "average" || type === "balance") {
+		} else if (mode === Mode.average || type === FinanceLiteral.balance) {
 			return totalAmount / validEls;
 		} else {
 			return totalAmount;
@@ -190,7 +190,7 @@ const History: FC<HistoryProps> = (props) => {
 				</div>
 			);
 		} else {
-			if (mode !== "individual") {
+			if (mode !== Mode.individual) {
 				return <Graph data={data} graphText={graphTextHistory} />;
 			} else {
 				return dataArr;
@@ -199,9 +199,9 @@ const History: FC<HistoryProps> = (props) => {
 	}
 
 	const graphTextHistory: GraphText = {
-		income: `${mode === "cumulative" ? "Total" : "Average"} income`,
+		income: `${mode === Mode.cumulative ? "Total" : "Average"} income`,
 		balance: "Average balance",
-		spending: `${mode === "cumulative" ? "Total" : "Average"} spending`,
+		spending: `${mode === Mode.cumulative ? "Total" : "Average"} spending`,
 	};
 
 	const minDate: string = history.length ? history[0].date : "";
